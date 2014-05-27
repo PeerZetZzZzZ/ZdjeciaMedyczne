@@ -7,14 +7,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class FXMLController implements Initializable {
+public class MainWindowTechnician implements Initializable {
     
     @FXML
     private Label label;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
+        System.out.println("You clicked me fat motherfucker!");
         label.setText("Hello World!");
     }
     
