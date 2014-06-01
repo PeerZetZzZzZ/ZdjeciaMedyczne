@@ -14,7 +14,7 @@ public class MainWindowTechnician implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me fat motherfucker!");
+        System.out.println("You clicked me fat motherfucker2!");
         label.setText("Hello World!");
     }
     
