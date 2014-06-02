@@ -14,7 +14,11 @@ public class MainWindowTechnician implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
+<<<<<<< HEAD:BazaZdjecMedycznych/src/main/java/controller/MainWindowTechnician.java
         System.out.println("You clicked me fucker !");
+=======
+        System.out.println("You clicked me fat motherfucker2!");
+>>>>>>> master:BazaZdjecMedycznych/src/main/java/controller/MainWindowTechnician.java
         label.setText("Hello World!");
     }
     
