@@ -50,19 +50,43 @@ public class DBConnector {
     /**
      * The database name we connect.
      */
-    private String databaseName="ZdjeciaMedyczne";
+    private String databaseName="MedicalPictures";
+    
+    private String restrictedUsername="restrictedUser";
+    private String restrictedPassword="restrictedReadOnly";
+   
+    private String patientUsername="patientsAccount";
+    private String patientPassword="patientsPassword";
+    
+    private String technicianUsername="technicianAccount";
+    private String technicianPassword="technicianPassword";
+    
+    private String doctorUsername="doctorAccount";
+    private String doctorPassword="doctorPassword";
+    
+    private String adminUsername="adminAccount";
+    private String adminPassword="adminPassword";
     private DBConnector() {
     }
     /**
      * Method allows connecting to the mysql server, for the given account.
-     * @param username The name of the user existing in the database.
-     * @param password The password for the given user
      * @return True in case of successful login and false in other case.
      */
-    public boolean createDatabaseConnection(String username, String password){
-           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,username,password);
+    public boolean createDatabaseRestrictedConnection(){
+           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,restrictedUsername,restrictedPassword);
     }
-
+    public boolean createDatabasePatientConnection(){
+           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,patientUsername,patientPassword);   
+    }
+    public boolean createDatabaseDoctorConnection(){
+           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,doctorUsername,doctorPassword);   
+    }
+    public boolean createDatabaseAdminConnection(){
+           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,adminUsername,adminPassword);   
+    }
+      public boolean createDatabaseTechnicianConnection(){
+           return connectToTheDB(driverName,dbUrl,serverName,port,databaseName,technicianUsername,technicianPassword);   
+    }
     /**
      * Method connects to the database.
      *
@@ -91,5 +115,14 @@ public class DBConnector {
     }
     public Statement getStatement(){
         return statement;
+    }
+    public boolean disconnectFromServer(){
+        try {
+            con.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnector.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 }

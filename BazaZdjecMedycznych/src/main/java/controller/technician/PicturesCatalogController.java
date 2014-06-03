@@ -15,11 +15,11 @@ import javafx.scene.layout.BorderPane;
  *
  * @author peer
  */
-public class PicturesCatalogControllerController extends Window {
-
+public class PicturesCatalogController extends Window {
+    
     @FXML
     private BorderPane borderPanePictureCatalog;
-    public PicturesCatalogControllerController(){
+    public PicturesCatalogController(){
         super();
     }
     public BorderPane sharePane(){

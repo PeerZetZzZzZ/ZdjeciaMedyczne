@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import model.login.LoginProvider;
 
 /**
@@ -29,6 +31,8 @@ public class LoginWindowController extends Window {
     private TextField passwordTextField;
     @FXML
     private Label errorLabel;
+    @FXML
+    private BorderPane loginWindowBorderPane;
     /**
      * Initializes the controller class.
      */
@@ -48,11 +52,19 @@ public class LoginWindowController extends Window {
     }
 
     private void loginToDatabase() {
-        String resultOfLoging=loginProvider.connectToDatabase(usernameTextField.getText(),passwordTextField.getText());
-        if(resultOfLoging.equals("Successful"))
-            
-        errorLabel.setText(loginProvider.connectToDatabase(usernameTextField.getText(),passwordTextField.getText()));
+        String resultOfLoging = loginProvider.connectToDatabase(usernameTextField.getText(), passwordTextField.getText());
+        if (resultOfLoging.equals("Successful")) {
+            Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
+            loginWindow.hide();
+            showWindow("technician/MainWindowTechnician.fxml");
+        }
+        clearTextFields();
+
+        errorLabel.setText(resultOfLoging);
     }
 
+    private void clearTextFields() {
+        usernameTextField.setText("");
+        passwordTextField.setText("");
+    }
 }
-
