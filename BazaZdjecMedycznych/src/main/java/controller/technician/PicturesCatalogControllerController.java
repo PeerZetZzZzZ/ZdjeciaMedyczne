@@ -7,6 +7,8 @@
 package controller.technician;
 
 import controller.Window;
+import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
 
 /**
  * FXML Controller class
@@ -15,8 +17,12 @@ import controller.Window;
  */
 public class PicturesCatalogControllerController extends Window {
 
- 
+    @FXML
+    private BorderPane borderPanePictureCatalog;
     public PicturesCatalogControllerController(){
         super();
+    }
+    public BorderPane sharePane(){
+        return borderPanePictureCatalog;
     }
 }

@@ -9,35 +9,43 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.ResourceBundleMaster;
 
 /**
  *
  * @author peer
  */
 public class Window implements Initializable {
-    private ResourceBundle resourceBundle;
-    private String resourceBundleName="messages_EN";
 
-    public Window(){
-           resourceBundle = ResourceBundle.getBundle(resourceBundleName);
-    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    
     }
     
-    protected void showWindow(String windowName) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/"+windowName),resourceBundle);
+    /**
+     * Method is responisble for showing independent window.
+     * @param windowName Name of the window to show, exactly the path to the window, without /fxml/ part
+     */
+    protected void showWindow(String windowName){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/"+windowName),ResourceBundleMaster.translator.getResourceBundle());
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException ex) {
+            System.err.println("showWindow: Error while showing the window");
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
     }
     
     

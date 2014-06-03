@@ -14,8 +14,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         resourceBundle = ResourceBundle.getBundle("messages_EN");
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/technician/MainWindowTechnician.fxml"),resourceBundle);
-
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoginWindow.fxml"),resourceBundle);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("JavaFX and Maven");
