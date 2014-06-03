@@ -1,5 +1,7 @@
-package controller;
+package main;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -8,19 +10,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
+    private ResourceBundle resourceBundle; //for handling translations
     @Override
     public void start(Stage stage) throws Exception {
-<<<<<<< HEAD
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainwindow/MainWindowTechnician.fxml"));
-        
-=======
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainWindowTechnician.fxml"));
+        resourceBundle = ResourceBundle.getBundle("messages_EN");
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/technician/MainWindowTechnician.fxml"),resourceBundle);
 
->>>>>>> master
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         stage.show();
