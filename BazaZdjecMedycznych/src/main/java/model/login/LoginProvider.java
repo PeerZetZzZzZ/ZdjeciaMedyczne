@@ -70,7 +70,7 @@ public class LoginProvider {
     }
 
     public boolean connectToApplication(String username, String password) {
-
+        
     }
 
 }
