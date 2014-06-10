@@ -56,7 +56,7 @@ public class LoginWindowController extends Window {
         if (resultOfLoging.equals("Successful")) {
             Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
             loginWindow.hide();
-            showWindow("technician/MainWindowTechnician.fxml");
+            showWindow("admin/MainWindowAdmin.fxml");
         }
         clearTextFields();
 
