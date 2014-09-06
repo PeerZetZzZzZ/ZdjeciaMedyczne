@@ -178,8 +178,12 @@ public class DBConnector {
     }
 
     /**
-     *  Method creates the basic database schema, indcluding tables, users and their permissions. Users- users which will be used for database server connection.
-     * @throws SQLException When there is a problem with executing some statement
+     * Method creates the basic database schema, indcluding tables, users and
+     * their permissions. Users- users which will be used for database server
+     * connection.
+     *
+     * @throws SQLException When there is a problem with executing some
+     * statement
      */
     public void createDatabaseSchema() throws SQLException {
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(id integer primary key, username varchar(100),password varchar(100),account_type varchar(15))");

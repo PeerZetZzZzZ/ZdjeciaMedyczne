@@ -35,7 +35,7 @@ public class Window implements Initializable {
      */
     protected void showWindow(String windowName){
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/"+windowName),ResourceBundleMaster.translator.getResourceBundle());
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/"+windowName),ResourceBundleMaster.TRANSLATOR.getResourceBundle());
             Scene scene = new Scene(root);
             scene.getStylesheets().add("/styles/Styles.css");
             Stage stage = new Stage();

@@ -10,16 +10,17 @@ import javafx.scene.layout.BorderPane;
 import model.StageMaster;
 
 public class MainWindowTechnicianController extends Window {
-  
+
     @FXML
     private Button picturesCatalogButton;
     @FXML
     private BorderPane borderPaneMainWindowTechnician;
     PicturesCatalogController picturesController = new PicturesCatalogController();
-    public MainWindowTechnicianController(){
+
+    public MainWindowTechnicianController() {
         super();
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -32,11 +33,13 @@ public class MainWindowTechnicianController extends Window {
             fillMiddle();
         });
     }
-    private void fillMiddle(){
-        Parent picturesCatalogRoot= StageMaster.master.getRoot("technician/PicturesCatalog.fxml");        
-        if(picturesCatalogRoot!=null)
+
+    private void fillMiddle() {
+        Parent picturesCatalogRoot = StageMaster.master.getRoot("technician/PicturesCatalog.fxml");
+        if (picturesCatalogRoot != null) {
             this.borderPaneMainWindowTechnician.setCenter(picturesCatalogRoot);
+        }
         //picturesCatalogStage.show();
-    } 
-    
+    }
+
 }

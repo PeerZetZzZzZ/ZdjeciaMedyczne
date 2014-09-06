@@ -44,8 +44,8 @@ public class DBUsersManager {
         return 0;
     }
 
-    public void createUserInApplication() {
-        // statement.execute("INSERT INTO ZdjeciaMedyczne.UsersDB VALUES(" + String.valueOf(userInsertIndex) + "," + username + "," + password + "," + "PATIENT" + ")");
+    public void createUserInApplication(String username, String password, UserType type) throws SQLException {
+        statement.execute("INSERT INTO ZdjeciaMedyczne.UsersDB VALUES(LAST_INSERT_ID(),'" + username + "','" + password + "','" + type.toString() + "')");
 
     }
 
@@ -104,7 +104,7 @@ public class DBUsersManager {
         }
         try {
             usersDbSet.beforeFirst();
-            while(usersDbSet.next()) {
+            while (usersDbSet.next()) {
                 accountTypeMap.put(usersDbSet.getInt("id"), usersDbSet.getString("account_type"));
             }
         } catch (SQLException ex) {

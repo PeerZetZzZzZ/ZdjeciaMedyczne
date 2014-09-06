@@ -30,25 +30,29 @@ public class MainWindowAdminController extends Window {
     /**
      * Initializes the controller class.
      */
-    public MainWindowAdminController(){
+    public MainWindowAdminController() {
         super();
     }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initButtons();
     }
-    private void initButtons(){
-            manageUsersButton.setOnAction((event) -> {
+
+    private void initButtons() {
+        manageUsersButton.setOnAction((event) -> {
             showManageUserWindow();
         });
     }
+
     private void showManageUserWindow() {
         Parent manageUsersRoot = StageMaster.master.getRoot("admin/ManageUsers.fxml");
         if (manageUsersRoot != null) {
             this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
         }
     }
-    public BorderPane getBorderPane(){
+
+    public BorderPane getBorderPane() {
         return mainWindowAdminBorderPane;
     }
 

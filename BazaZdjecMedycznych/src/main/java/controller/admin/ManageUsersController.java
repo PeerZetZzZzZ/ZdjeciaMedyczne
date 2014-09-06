@@ -6,24 +6,19 @@
 package controller.admin;
 
 import controller.Window;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import model.ResourceBundleMaster;
 import model.StageMaster;
 import model.db.DBUsersManager;
@@ -57,7 +52,7 @@ public class ManageUsersController extends Window {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        rb=ResourceBundleMaster.translator.getResourceBundle();
+        rb=ResourceBundleMaster.TRANSLATOR.getResourceBundle();
         initButtons();
         linkTableColumns();//after it we will can paste UserEntry to the table
         fillUsersTable();
@@ -91,14 +86,16 @@ public class ManageUsersController extends Window {
             if (manageUsersRoot != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 Parent root = StageMaster.master.getRoot("admin/MainWindowAdmin.fxml");
-                try {
-                    Pane p = fxmlLoader.load((getClass().getResource("/fxml/admin/MainWindowAdmin.fxml"),ResourceBundleMaster.translator.getResourceBundle()));
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(ManageUsersController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                MainWindowAdminController mainWindowAdminController = fxmlLoader.<MainWindowAdminController>getController();
-                mainWindowAdminController.getBorderPane().setCenter(manageUsersRoot);
+//                try {
+//                    Pane p = fxmlLoader.load((getClass().getResource("/fxml/admin/MainWindowAdmin.fxml"),ResourceBundleMaster.translator.getResourceBundle()instanceof));
+//                    
+//                } catch (IOException ex) {
+//                    Logger.getLogger(ManageUsersController.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                MainWindowAdminController mainWindowAdminController = fxmlLoader.<MainWindowAdminController>getController();
+//                mainWindowAdminController.getBorderPane().setCenter(manageUsersRoot);
+                showWindow("admin/AddUser.fxml");
+                
 
             }
         }

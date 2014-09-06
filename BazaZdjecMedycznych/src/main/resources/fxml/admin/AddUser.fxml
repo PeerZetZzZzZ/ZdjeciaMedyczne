@@ -6,8 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.admin.AddUserController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -27,8 +26,8 @@
             <Label prefHeight="15.0" prefWidth="304.0" text="%password" GridPane.rowIndex="1" />
             <TextField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="%accountType" GridPane.rowIndex="2" />
-            <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" text="%createUser" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="accountTypeCombobox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="createUserButton" mnemonicParsing="false" text="%createUser" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" text="%cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>

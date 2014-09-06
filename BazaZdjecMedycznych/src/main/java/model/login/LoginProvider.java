@@ -47,7 +47,7 @@ public class LoginProvider {
                     dateTimeNow = DateTime.now().plusSeconds(30);
                     if (!result) {
                         failsCounter++;
-                        return ResourceBundleMaster.translator.getTranslation("unsuccessfulLoginMessage");
+                        return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                     }
                     return "Successful";
                 } else {
@@ -58,14 +58,14 @@ public class LoginProvider {
                         failsCounter = 0;
                     }
                     //Return information about unsuccessful login and time punishment
-                    return ResourceBundleMaster.translator.getTranslation("waitPunishmentMessage")
-                            + String.valueOf(secondsBetween.getSeconds()) + ResourceBundleMaster.translator.getTranslation("seconds");
+                    return ResourceBundleMaster.TRANSLATOR.getTranslation("waitPunishmentMessage")
+                            + String.valueOf(secondsBetween.getSeconds()) + ResourceBundleMaster.TRANSLATOR.getTranslation("seconds");
 
                 }
             }
-            return ResourceBundleMaster.translator.getTranslation("emptyUsernameOrPasswordMessage");
+            return ResourceBundleMaster.TRANSLATOR.getTranslation("emptyUsernameOrPasswordMessage");
         }
-        return ResourceBundleMaster.translator.getTranslation("unsuccessfulLoginMessage");
+        return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
 
     }
 

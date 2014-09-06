@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class StageMaster {
     public static StageMaster master = new StageMaster();
-    ResourceBundle resourceBundle = ResourceBundleMaster.translator.getResourceBundle();
+    ResourceBundle resourceBundle = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
     
     private StageMaster(){
         
