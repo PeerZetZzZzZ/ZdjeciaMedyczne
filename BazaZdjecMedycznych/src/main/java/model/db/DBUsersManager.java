@@ -73,20 +73,21 @@ public class DBUsersManager {
     private void createLoginUser(String username, String password, String type) throws RegexException, SQLException {
         patternChecker.verifyUser(username);
         patternChecker.verifyPassword(password);
-        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?,?)",getInsertId("UsersDB"),username,password,type);
+        int amount = getInsertId("UsersDB");
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?,?)",amount,username,password,type);
 
     }
 
     private void createPerson(String name, String surname, String age, String gender, String specialization,String usertype) throws RegexException, SQLException {
         patternChecker.verifySingleWord(name);
         patternChecker.verifySingleWord(surname);
-        patternChecker.verifySingleNumber(surname);
+        patternChecker.verifySingleNumber(age);
         if(usertype.equals("DOCTOR")){
             patternChecker.verifySingleWord(specialization);
         }
         patternChecker.verifySingleWord(gender);
         switch(usertype){
-            case "ADMIN":
+            case "ADMIN":   
                 queryRunner.update(connection,"INSERT INTO MedicalPictures.Admin VALUES(?,?,?,?,?)",getInsertId("Admin"),
                         name,surname,gender,age);
                 break;
@@ -178,6 +179,7 @@ public class DBUsersManager {
      */
     private int getInsertId(String table) throws SQLException{
         ResultSet lastId = statement.executeQuery("SELECT COUNT(*) AS AMOUNT FROM MedicalPictures."+table);
+        lastId.first();
         int amountOfRows = lastId.getInt("AMOUNT");
         return amountOfRows +1;
     }

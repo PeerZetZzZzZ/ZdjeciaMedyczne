@@ -72,7 +72,14 @@ public class AddUserController extends Window {
         initButtons();
         this.specializationLabel.setVisible(false);
         this.specializationTextField.setVisible(false);
-        // TODO
+
+        nameTextField.setText("Marek");
+        surnameTextField.setText("Kulomb");
+        ageTextField.setText("15");
+        usernameTextField.setText("mar4");
+        passwordTextField.setText("aaa2");
+        
+            
     }
 
     private void fillAccountType() {
