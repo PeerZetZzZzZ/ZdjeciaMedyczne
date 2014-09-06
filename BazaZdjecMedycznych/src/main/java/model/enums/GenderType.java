@@ -4,15 +4,12 @@
  * and open the template in the editor.
  */
 
-package model.db;
-
-import java.sql.Statement;
+package model.enums;
 
 /**
  *
- * @author peer
+ * @author PeerZet
  */
-public class UsersDBMaster {
-//    private Statement statement = DBConnector.master.getConnection();
-
+public enum GenderType {
+    MALE, FEMALE
 }

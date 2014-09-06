@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.enums.UserType;
+import org.apache.commons.dbutils.QueryRunner;
 
 /**
  *
@@ -30,6 +31,7 @@ public class DBConnector {
     private DatabaseMetaData data;
     private Connection con;
     private DatabaseMetaData dbmd;
+    private QueryRunner run = new QueryRunner();//used to run easy queries from apache dbutils
 
     /**
      * The name of the driver for DB connection. We use mysql driver.
@@ -122,10 +124,15 @@ public class DBConnector {
         return true;
     }
 
-    public Statement getStatement() {
-        return statement;
+    public Connection getConnection() {
+        return con;
     }
-
+    public QueryRunner getQueryRunner(){
+        return run;
+    }
+    public Statement getStatement(){
+        return statement;   
+    }
     public boolean disconnectFromServer() {
         try {
             con.close();
@@ -187,10 +194,10 @@ public class DBConnector {
      */
     public void createDatabaseSchema() throws SQLException {
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(id integer primary key, username varchar(100),password varchar(100),account_type varchar(15))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Patient(id integer, name varchar(100), surname varchar(100),sex varchar(6),address varchar(150), age integer, foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Admin(id integer, name varchar(100), surname varchar(100),sex varchar(6),address varchar(150), age integer, foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Doctor(id integer, name varchar(100), surname varchar(100),sex varchar(6),address varchar(150), age integer,specialization varchar(50), foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Technician(id integer, name varchar(100), surname varchar(100),sex varchar(6),address varchar(150), age integer,specialization varchar(50), foreign key (id) references UsersDB(id))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Patient(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Admin(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Doctor(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer,specialization varchar(50), foreign key (id) references UsersDB(id))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Technician(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(id integer primary key, body_part varchar(255))");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(id integer primary key, picture_type varchar(255))");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id integer primary key, patient_id integer, doctor_id integer, description varchar(500), foreign key (patient_id) references MedicalPictures.Patient(id), foreign key (doctor_id) references MedicalPictures(id))");

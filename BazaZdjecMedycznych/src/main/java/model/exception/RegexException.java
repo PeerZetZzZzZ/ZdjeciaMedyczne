@@ -8,7 +8,12 @@ package model.exception;
  */
 public class RegexException extends Exception {
 
+    private String message;
     public RegexException(String message) {
-
+        this.message=message;
+    }
+    @Override
+    public String getMessage(){
+        return message;
     }
 }
