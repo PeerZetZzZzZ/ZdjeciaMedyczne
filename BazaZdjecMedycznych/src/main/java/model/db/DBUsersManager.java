@@ -56,7 +56,7 @@ public class DBUsersManager {
 
     public void createUser(String name, String surname,String gender, String age, String username, String password, String specialization, String usertype) throws SQLException, RegexException {
        createLoginUser(username,password,usertype);
-       createPerson(name,surname,age,gender,specialization,usertype);
+       createPerson(username,name,surname,age,gender,specialization,usertype);
 
     }
 
@@ -74,11 +74,11 @@ public class DBUsersManager {
         patternChecker.verifyUser(username);
         patternChecker.verifyPassword(password);
         int amount = getInsertId("UsersDB");
-        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?,?)",amount,username,password,type);
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?)",username,password,type);
 
     }
 
-    private void createPerson(String name, String surname, String age, String gender, String specialization,String usertype) throws RegexException, SQLException {
+    private void createPerson(String username, String name, String surname, String age, String gender, String specialization,String usertype) throws RegexException, SQLException {
         patternChecker.verifySingleWord(name);
         patternChecker.verifySingleWord(surname);
         patternChecker.verifySingleNumber(age);
@@ -88,19 +88,19 @@ public class DBUsersManager {
         patternChecker.verifySingleWord(gender);
         switch(usertype){
             case "ADMIN":   
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Admin VALUES(?,?,?,?,?)",getInsertId("Admin"),
+                queryRunner.update(connection,"INSERT INTO MedicalPictures.Admin VALUES(?,?,?,?,?)",username,
                         name,surname,gender,age);
                 break;
             case "TECHNICIAN":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?,?)",getInsertId("Technician"),
+                queryRunner.update(connection,"INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?,?)",username,
                         name,surname,gender,age);
                 break;
             case "PATIENT":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Patient VALUES(?,?,?,?,?)",getInsertId("Patient"),
+                queryRunner.update(connection,"INSERT INTO MedicalPictures.Patient VALUES(?,?,?,?,?)",username,
                         name,surname,gender,age);
                 break;
             case "DOCTOR":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Doctor VALUES(?,?,?,?,?,?)",getInsertId("Doctor"),
+                queryRunner.update(connection,"INSERT INTO MedicalPictures.Doctor VALUES(?,?,?,?,?,?)",username,
                         name,surname,gender,age,specialization);
                 break;
         }

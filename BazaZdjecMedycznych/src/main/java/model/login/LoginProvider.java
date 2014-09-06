@@ -5,6 +5,9 @@
  */
 package model.login;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.ResourceBundleMaster;
 import model.db.DBConnector;
 import org.joda.time.DateTime;
@@ -43,11 +46,16 @@ public class LoginProvider {
         if (result) {
             if (username != null && password != null) {
                 if (failsCounter < 5) {
-                    //boolean result = connector.createDatabaseConnection(username, password);       
+                    //boolean result = connector.createDatabaseConnection(username, password);  to trzeba potem odkomentowac zeby dzialalo :D     
                     dateTimeNow = DateTime.now().plusSeconds(30);
                     if (!result) {
                         failsCounter++;
                         return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
+                    }
+                    try {
+                        connector.createDatabaseSchema();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LoginProvider.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     return "Successful";
                 } else {

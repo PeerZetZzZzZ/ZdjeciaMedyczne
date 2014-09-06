@@ -127,12 +127,15 @@ public class DBConnector {
     public Connection getConnection() {
         return con;
     }
-    public QueryRunner getQueryRunner(){
+
+    public QueryRunner getQueryRunner() {
         return run;
     }
-    public Statement getStatement(){
-        return statement;   
+
+    public Statement getStatement() {
+        return statement;
     }
+
     public boolean disconnectFromServer() {
         try {
             con.close();
@@ -193,15 +196,18 @@ public class DBConnector {
      * statement
      */
     public void createDatabaseSchema() throws SQLException {
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(id integer primary key, username varchar(100),password varchar(100),account_type varchar(15))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Patient(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Admin(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Doctor(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer,specialization varchar(50), foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Technician(id integer, name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (id) references UsersDB(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(id integer primary key, body_part varchar(255))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(id integer primary key, picture_type varchar(255))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id integer primary key, patient_id integer, doctor_id integer, description varchar(500), foreign key (patient_id) references MedicalPictures.Patient(id), foreign key (doctor_id) references MedicalPictures(id))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureCapture(id integer primary key, capture_datetime datetime, picture_id integer, technician_id integer, foreign key (picture_id) references MedicalPictures.Picture(id), foreign key (technician_id) references MedicalPictures.Technician(id))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(username varchar(100) primary key,password varchar(100),account_type varchar(15))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Patient(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Admin(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Doctor(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer,specialization varchar(50), foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Technician(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(body_part varchar(100) primary key)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(picture_type varchar(100) primary key)");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id integer primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username), foreign key (doctor_username) references MedicalPictures.Doctor(username))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Picture(id integer primary key, capture_datetime datetime, picture_data BLOB, username varchar(100), technician_username varchar(100),"
+                + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100), foreign key (username) references MedicalPictures.UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (technician_username)"
+                + "         references MedicalPictures.Technician(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (doctor_username) references MedicalPictures.Doctor(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (body_part) references MedicalPictures.BodyPart(body_part) ON DELETE CASCADE ON UPDATE CASCADE,"
+                + "         foreign key (picture_type) references MedicalPictures.PictureType(picture_type) ON DELETE CASCADE ON UPDATE CASCADE)");
         statement.execute("CREATE USER 'restrictedUser'@'localhost' IDENTIFIED by 'restrictedReadOnly'");
         statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO 'restrictedUser'@'localhost'");
         createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.ADMIN);
