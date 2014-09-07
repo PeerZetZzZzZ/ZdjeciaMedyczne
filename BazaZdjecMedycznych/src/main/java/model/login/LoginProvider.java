@@ -52,11 +52,6 @@ public class LoginProvider {
                         failsCounter++;
                         return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                     }
-                    try {
-                        connector.createDatabaseSchema();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(LoginProvider.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                     return "Successful";
                 } else {
 

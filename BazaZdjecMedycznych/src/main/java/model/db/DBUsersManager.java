@@ -26,15 +26,15 @@ public class DBUsersManager {
     private Connection connection = DBConnector.master.getConnection();
     private Statement statement = DBConnector.master.getStatement();
     private QueryRunner queryRunner = DBConnector.master.getQueryRunner();//for easy quries
-    private HashMap<Integer, String> usernameMap = new HashMap<Integer, String>();
-    private HashMap<Integer, String> passwordMap = new HashMap<Integer, String>();
-    private HashMap<Integer, String> accountTypeMap = new HashMap<Integer, String>();
+    private HashMap<String, String> usernameMap = new HashMap<String, String>();
+    private HashMap<String, String> passwordMap = new HashMap<String, String>();
+    private HashMap<String, String> accountTypeMap = new HashMap<String, String>();
     private ResultSet usersDbSet;
     /**
      * Used for checking if the input values are correct, before inserting them
      * to DB.
      */
-    private final RegexPatternChecker patternChecker = new RegexPatternChecker() ;
+    private final RegexPatternChecker patternChecker = new RegexPatternChecker();
     /**
      * This value will be the id of the inserted user to UsersDB and other
      * Patient,Doctor,Admin,Technician tables
@@ -54,9 +54,18 @@ public class DBUsersManager {
         return 0;
     }
 
-    public void createUser(String name, String surname,String gender, String age, String username, String password, String specialization, String usertype) throws SQLException, RegexException {
-       createLoginUser(username,password,usertype);
-       createPerson(username,name,surname,age,gender,specialization,usertype);
+    public void createUser(String name, String surname, String gender, String age, String username, String password, String specialization, String usertype) throws SQLException, RegexException {
+        patternChecker.verifyUser(username);
+        patternChecker.verifyPassword(password);
+        patternChecker.verifySingleWord(name);
+        patternChecker.verifySingleWord(surname);
+        patternChecker.verifySingleNumber(age);
+        if (usertype.equals("DOCTOR")) {
+            patternChecker.verifySingleWord(specialization);
+        }
+        patternChecker.verifySingleWord(gender);
+        createLoginUser(username, password, usertype);
+        createPerson(username, name, surname, age, gender, specialization, usertype);
 
     }
 
@@ -71,37 +80,27 @@ public class DBUsersManager {
      * @throws SQLException1
      */
     private void createLoginUser(String username, String password, String type) throws RegexException, SQLException {
-        patternChecker.verifyUser(username);
-        patternChecker.verifyPassword(password);
-        int amount = getInsertId("UsersDB");
-        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?)",username,password,type);
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?)", username, password, type);
 
     }
 
-    private void createPerson(String username, String name, String surname, String age, String gender, String specialization,String usertype) throws RegexException, SQLException {
-        patternChecker.verifySingleWord(name);
-        patternChecker.verifySingleWord(surname);
-        patternChecker.verifySingleNumber(age);
-        if(usertype.equals("DOCTOR")){
-            patternChecker.verifySingleWord(specialization);
-        }
-        patternChecker.verifySingleWord(gender);
-        switch(usertype){
-            case "ADMIN":   
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Admin VALUES(?,?,?,?,?)",username,
-                        name,surname,gender,age);
+    private void createPerson(String username, String name, String surname, String age, String gender, String specialization, String usertype) throws RegexException, SQLException {
+        switch (usertype) {
+            case "ADMIN":
+                queryRunner.update(connection, "INSERT INTO MedicalPictures.Admin VALUES(?,?,?,?,?)", username,
+                        name, surname, gender, age);
                 break;
             case "TECHNICIAN":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?,?)",username,
-                        name,surname,gender,age);
+                queryRunner.update(connection, "INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?,?)", username,
+                        name, surname, gender, age);
                 break;
             case "PATIENT":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Patient VALUES(?,?,?,?,?)",username,
-                        name,surname,gender,age);
+                queryRunner.update(connection, "INSERT INTO MedicalPictures.Patient VALUES(?,?,?,?,?)", username,
+                        name, surname, gender, age);
                 break;
             case "DOCTOR":
-                queryRunner.update(connection,"INSERT INTO MedicalPictures.Doctor VALUES(?,?,?,?,?,?)",username,
-                        name,surname,gender,age,specialization);
+                queryRunner.update(connection, "INSERT INTO MedicalPictures.Doctor VALUES(?,?,?,?,?,?)", username,
+                        name, surname, gender, age, specialization);
                 break;
         }
 
@@ -112,14 +111,14 @@ public class DBUsersManager {
      *
      * @return
      */
-    public HashMap<Integer, String> readUsernames() {
+    public HashMap<String, String> readUsernames() {
         if (!usernameMap.isEmpty()) {
             usernameMap.clear();
         }
         try {
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
-                usernameMap.put(usersDbSet.getInt("id"), usersDbSet.getString("username"));
+                usernameMap.put(usersDbSet.getString("username"), usersDbSet.getString("username"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,14 +140,14 @@ public class DBUsersManager {
         return users;
     }
 
-    public HashMap<Integer, String> readPasswords() {
+    public HashMap<String, String> readPasswords() {
         if (!passwordMap.isEmpty()) {
             passwordMap.clear();
         }
         try {
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
-                passwordMap.put(usersDbSet.getInt("id"), usersDbSet.getString("password"));
+                passwordMap.put(usersDbSet.getString("username"), usersDbSet.getString("password"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,31 +155,32 @@ public class DBUsersManager {
         return passwordMap;
     }
 
-    public HashMap<Integer, String> readAccountTypes() {
+    public HashMap<String, String> readAccountTypes() {
         if (!usernameMap.isEmpty()) {
             accountTypeMap.clear();
         }
         try {
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
-                accountTypeMap.put(usersDbSet.getInt("id"), usersDbSet.getString("account_type"));
+                accountTypeMap.put(usersDbSet.getString("username"), usersDbSet.getString("account_type"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return accountTypeMap;
     }
-    
+
     /**
      * This Method returns the id for inserting new row for the given table.
+     *
      * @param table
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private int getInsertId(String table) throws SQLException{
-        ResultSet lastId = statement.executeQuery("SELECT COUNT(*) AS AMOUNT FROM MedicalPictures."+table);
+    private int getInsertId(String table) throws SQLException {
+        ResultSet lastId = statement.executeQuery("SELECT COUNT(*) AS AMOUNT FROM MedicalPictures." + table);
         lastId.first();
         int amountOfRows = lastId.getInt("AMOUNT");
-        return amountOfRows +1;
+        return amountOfRows + 1;
     }
 }

@@ -1,6 +1,6 @@
 package model.regex;
 
-import jregex.*;
+import jregex.Pattern;
 import model.ResourceBundleMaster;
 import model.exception.RegexException;
 
@@ -13,7 +13,7 @@ import model.exception.RegexException;
 public class RegexPatternChecker {
 
     private final String usernamePattern = "[a-z0-9_]{1,20}";//only a-z and 0-9 and _ only 20 signs
-    private final String passwordPattern = "[\\w^ '\"]{3,15}";// \\ because of java \w illegal character, 3-15 signs
+    private final String passwordPattern = "[\\w][^ '\"]{3,15}";// \\ because of java \w illegal character, 3-15 signs, no ' and " and space
     private final String singleWordPattern = "[a-zA-Z]{1,40}";// only a-Z and 1-40 signs
     private final String singleNumberPattern = "[\\d]{1,10}";// only integer max 10 signs
 
@@ -31,7 +31,7 @@ public class RegexPatternChecker {
     }
 
     public void verifyUser(String username) throws RegexException {
-        if (username == null) {
+        if (username == null && username.equals("")) {
             throw new RegexException(ResourceBundleMaster.TRANSLATOR.getTranslation("nullValue"));
         }
         if (!usernameRegex.matcher(username).matches()) {//if not matches throw exception
@@ -41,7 +41,7 @@ public class RegexPatternChecker {
     }
 
     public void verifyPassword(String password) throws RegexException {
-        if (password == null) {
+        if (password == null && password.equals("")) {
             throw new RegexException(ResourceBundleMaster.TRANSLATOR.getTranslation("nullValue"));
         }
         if (!passwordRegex.matcher(password).matches()) {//if not matches throw exception
@@ -51,7 +51,7 @@ public class RegexPatternChecker {
     }
 
     public void verifySingleWord(String singleWord) throws RegexException {
-        if (singleWord == null) {
+        if (singleWord == null && singleWord.equals("")) {
             throw new RegexException(ResourceBundleMaster.TRANSLATOR.getTranslation("nullValue"));
         }
         if (!singleWordRegex.matcher(singleWord).matches()) {//if not matches throw exception
@@ -61,7 +61,7 @@ public class RegexPatternChecker {
     }
 
     public void verifySingleNumber(String singleNumber) throws RegexException {
-        if (singleNumber == null) {
+        if (singleNumber == null && singleNumber.equals("")) {
             throw new RegexException(ResourceBundleMaster.TRANSLATOR.getTranslation("nullValue"));
         }
         if (!singleNumberRegex.matcher(singleNumber).matches()) {//if not matches throw exception

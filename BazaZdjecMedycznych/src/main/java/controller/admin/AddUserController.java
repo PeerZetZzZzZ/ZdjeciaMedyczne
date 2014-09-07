@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.ResourceBundleMaster;
 import model.db.DBUsersManager;
 import model.enums.GenderType;
 import model.enums.UserType;
@@ -102,8 +103,7 @@ public class AddUserController extends Window {
      * combobox has value doctor or technician
      */
     private void showSpecilization() {
-        if ((accountTypeCombobox.getValue().toString().equals(UserType.TECHNICIAN.toString()))
-                || (accountTypeCombobox.getValue().toString().equals(UserType.DOCTOR.toString()))) {
+        if ((accountTypeCombobox.getValue().toString().equals(UserType.DOCTOR.toString()))) {
             specializationTextField.setVisible(true);
             specializationLabel.setVisible(true);
         } else {
@@ -114,9 +114,15 @@ public class AddUserController extends Window {
 
     private void addNewUser() {
         try {
+            if(genderCombobox.getValue()!=null&&accountTypeCombobox.getValue()!=null){
             usersMaster.createUser(nameTextField.getText(), surnameTextField.getText(), genderCombobox.getValue().toString(),
                     ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
                     accountTypeCombobox.getValue().toString());
+            infoLabel.setText("User "+usernameTextField.getText()+" added!");
+            }
+            else{
+                infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("provideValues"));
+            }
         } catch (SQLException ex) {
             this.infoLabel.setText(ex.getMessage());
             Logger.getLogger(AddUserController.class.getName()).log(Level.SEVERE, null, ex);

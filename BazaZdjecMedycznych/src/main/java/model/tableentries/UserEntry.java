@@ -5,7 +5,8 @@
  */
 package model.tableentries;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -14,27 +15,34 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class UserEntry {
 
-    public SimpleIntegerProperty id ;
-    public SimpleStringProperty username ;
-    public SimpleStringProperty password ;
+    public SimpleStringProperty username;
+    public SimpleStringProperty password;
     public SimpleStringProperty accountType;
+    public BooleanProperty selected;
 
-    public UserEntry(Integer id,String username,String password,String accountType){
-        this.id= new SimpleIntegerProperty(id);
-        this.username= new SimpleStringProperty(username);
-        this.password= new SimpleStringProperty(password);
-        this.accountType= new SimpleStringProperty(accountType);
+    public UserEntry(String username, String password, String accountType, Boolean selected) {
+        this.username = new SimpleStringProperty(username);
+        this.password = new SimpleStringProperty(password);
+        this.accountType = new SimpleStringProperty(accountType);
+        this.selected = new SimpleBooleanProperty(selected);
     }
-    public Integer getUserId() {
-        return id.get();
+
+    public Boolean getSelected() {
+        return selected.get();
     }
+
     public String getUsername() {
         return username.get();
     }
+
     public String getPassword() {
         return password.get();
     }
+
     public String getAccountType() {
         return accountType.get();
+    }
+    public BooleanProperty selectedProperty(){ //neccessary if we want to have this checkbox value in Table
+        return selected;
     }
 }

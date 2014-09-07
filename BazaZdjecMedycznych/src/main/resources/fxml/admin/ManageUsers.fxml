@@ -19,11 +19,11 @@
    <center>
       <TableView fx:id="usersTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="idTableColumn" prefWidth="75.0" text="%id" />
           <TableColumn fx:id="usernameTableColumn" prefWidth="75.0" text="%username" />
             <TableColumn fx:id="passwordTableColumn" prefWidth="75.0" text="%password" />
             <TableColumn fx:id="accountTypeTableColumn" prefWidth="75.0" text="%accountType" />
             <TableColumn fx:id="checkboxTableColumn" prefWidth="75.0" />
+            <TableColumn fx:id="buttonTableColumn" prefWidth="75.0" />
         </columns>
       </TableView>
    </center>
