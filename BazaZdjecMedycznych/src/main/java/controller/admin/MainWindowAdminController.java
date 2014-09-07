@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import model.StageMaster;
 
 /**
@@ -35,7 +36,10 @@ public class MainWindowAdminController extends Window {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+        this.stage = (Stage) this.manageUsersButton.getScene().getWindow();
         initButtons();
+
     }
 
     private void initButtons() {

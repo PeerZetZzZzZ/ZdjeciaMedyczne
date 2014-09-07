@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.exception.RegexException;
@@ -91,7 +92,7 @@ public class DBUsersManager {
                         name, surname, gender, age);
                 break;
             case "TECHNICIAN":
-                queryRunner.update(connection, "INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?,?)", username,
+                queryRunner.update(connection, "INSERT INTO MedicalPictures.Technician VALUES(?,?,?,?,?)", username,
                         name, surname, gender, age);
                 break;
             case "PATIENT":
@@ -104,6 +105,12 @@ public class DBUsersManager {
                 break;
         }
 
+    }
+
+    public void deleteUsers(List<String> usernames) throws SQLException {
+        for (String username : usernames) {
+            queryRunner.update(connection, "DELETE FROM MedicalPictures.UsersDB WHERE username=?", username);
+        }
     }
 
     /**
@@ -182,5 +189,58 @@ public class DBUsersManager {
         lastId.first();
         int amountOfRows = lastId.getInt("AMOUNT");
         return amountOfRows + 1;
+    }
+
+    public HashMap<String, String> getUserValues(String username) throws SQLException {
+        ResultSet set = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE username='" + username + "'");
+        HashMap<String, String> userValues = new HashMap<String, String>();
+        if (set.first()) {
+            userValues.put("username", set.getString("username"));
+            userValues.put("password", set.getString("password"));
+            String accountType = set.getString("account_type");
+            userValues.put("account_type",accountType);
+            switch (accountType) {
+                case "ADMIN":
+                    ResultSet adminValues = statement.executeQuery("SELECT * FROM MedicalPictures.Admin WHERE username='" + username + "'");
+                    if (adminValues.first()) {
+                        userValues.put("name", adminValues.getString("name"));
+                        userValues.put("surname", adminValues.getString("surname"));
+                        userValues.put("sex", adminValues.getString("sex"));
+                        userValues.put("age", adminValues.getString("age"));
+                    }
+                    break;
+                case "TECHNICIAN":
+                    ResultSet technicianValues = statement.executeQuery("SELECT * FROM MedicalPictures.Technician WHERE username='" + username + "'");
+                    if (technicianValues.first()) {
+                        userValues.put("name", technicianValues.getString("name"));
+                        userValues.put("surname", technicianValues.getString("surname"));
+                        userValues.put("sex", technicianValues.getString("sex"));
+                        userValues.put("age", technicianValues.getString("age"));
+                    }
+                    break;
+                case "DOCTOR":
+                    ResultSet doctorValues = statement.executeQuery("SELECT * FROM MedicalPictures.Doctor WHERE username='" + username + "'");
+                    if (doctorValues.first()) {
+                        userValues.put("name", doctorValues.getString("name"));
+                        userValues.put("surname", doctorValues.getString("surname"));
+                        userValues.put("sex", doctorValues.getString("sex"));
+                        userValues.put("age", doctorValues.getString("age"));
+                        userValues.put("specialization", doctorValues.getString("specialization"));
+
+                    }
+                    break;
+                case "PATIENT":
+                    ResultSet patientValues = statement.executeQuery("SELECT * FROM MedicalPictures.Patient WHERE username='" + username + "'");
+                    if (patientValues.first()) {
+                        userValues.put("name", patientValues.getString("name"));
+                        userValues.put("surname", patientValues.getString("surname"));
+                        userValues.put("sex", patientValues.getString("sex"));
+                        userValues.put("age", patientValues.getString("age"));
+
+                    }
+                    break;
+            }
+        }
+        return userValues;
     }
 }

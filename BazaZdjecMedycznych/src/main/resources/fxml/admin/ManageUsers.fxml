@@ -6,24 +6,25 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="manageUsersBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.admin.ManageUsersController">
+<BorderPane fx:id="manageUsersBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.admin.ManageUsersController">
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="addUserButton" mnemonicParsing="false" text="%addUser" />
-            <Button mnemonicParsing="false" text="%deleteUser" />
-            <Button mnemonicParsing="false" text="%markAll" />
+            <Button fx:id="deleteUserButton" mnemonicParsing="false" text="%deleteUsers" />
+            <Button fx:id="markAllButton" mnemonicParsing="false" text="%markAll" />
+            <Button fx:id="unmarkAllButton" mnemonicParsing="false" text="%unmarkAll" />
          </children>
       </HBox>
    </top>
    <center>
       <TableView fx:id="usersTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="usernameTableColumn" prefWidth="75.0" text="%username" />
-            <TableColumn fx:id="passwordTableColumn" prefWidth="75.0" text="%password" />
-            <TableColumn fx:id="accountTypeTableColumn" prefWidth="75.0" text="%accountType" />
-            <TableColumn fx:id="checkboxTableColumn" prefWidth="75.0" />
-            <TableColumn fx:id="buttonTableColumn" prefWidth="75.0" />
+          <TableColumn fx:id="usernameTableColumn" prefWidth="110.0" text="%username" />
+            <TableColumn fx:id="passwordTableColumn" prefWidth="101.0" text="%password" />
+            <TableColumn fx:id="accountTypeTableColumn" prefWidth="120.0" text="%accountType" />
+            <TableColumn fx:id="buttonTableColumn" minWidth="160.0" prefWidth="160.0" resizable="false" />
+            <TableColumn fx:id="checkboxTableColumn" prefWidth="115.0" />
         </columns>
       </TableView>
    </center>

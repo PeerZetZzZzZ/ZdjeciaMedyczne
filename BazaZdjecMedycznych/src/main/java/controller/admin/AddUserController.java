@@ -8,6 +8,7 @@ package controller.admin;
 import controller.Window;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.ResourceBundleMaster;
 import model.db.DBUsersManager;
 import model.enums.GenderType;
@@ -52,8 +54,10 @@ public class AddUserController extends Window {
     private Label specializationLabel;
     @FXML
     private Label infoLabel;
-    @FXML 
+    @FXML
     private ComboBox genderCombobox;
+    @FXML
+    private Button closeButton;
     private DBUsersManager usersMaster = new DBUsersManager();
 
     private String username;
@@ -73,14 +77,14 @@ public class AddUserController extends Window {
         initButtons();
         this.specializationLabel.setVisible(false);
         this.specializationTextField.setVisible(false);
+        this.stage = (Stage) this.closeButton.getScene().getWindow();
 
         nameTextField.setText("Marek");
         surnameTextField.setText("Kulomb");
         ageTextField.setText("15");
         usernameTextField.setText("mar4");
         passwordTextField.setText("aaa2");
-        
-            
+
     }
 
     private void fillAccountType() {
@@ -95,6 +99,9 @@ public class AddUserController extends Window {
     private void initButtons() {
         createUserButton.setOnAction(event -> {
             addNewUser();
+        });
+        closeButton.setOnAction(event -> {
+            closeWindow();
         });
     }
 
@@ -114,13 +121,12 @@ public class AddUserController extends Window {
 
     private void addNewUser() {
         try {
-            if(genderCombobox.getValue()!=null&&accountTypeCombobox.getValue()!=null){
-            usersMaster.createUser(nameTextField.getText(), surnameTextField.getText(), genderCombobox.getValue().toString(),
-                    ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
-                    accountTypeCombobox.getValue().toString());
-            infoLabel.setText("User "+usernameTextField.getText()+" added!");
-            }
-            else{
+            if (genderCombobox.getValue() != null && accountTypeCombobox.getValue() != null) {
+                usersMaster.createUser(nameTextField.getText(), surnameTextField.getText(), genderCombobox.getValue().toString(),
+                        ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
+                        accountTypeCombobox.getValue().toString());
+                infoLabel.setText("User " + usernameTextField.getText() + " added!");
+            } else {
                 infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("provideValues"));
             }
         } catch (SQLException ex) {
@@ -135,6 +141,29 @@ public class AddUserController extends Window {
     private void readUser() {
         if (usernameTextField.getText() != null) {
 
+        }
+    }
+
+    public void fillValuesWithUser(String username) {
+        try {
+            HashMap<String, String> user = usersMaster.getUserValues(username);
+            this.nameTextField.setText(user.get("name"));
+            this.surnameTextField.setText(user.get("surname"));
+            this.genderCombobox.setValue(user.get("sex"));
+            this.ageTextField.setText(user.get("age"));
+            this.usernameTextField.setText(user.get("username"));
+            this.usernameTextField.setEditable(false);
+            this.passwordTextField.setText(user.get("password"));
+            String accountType = user.get("account_type");
+            this.accountTypeCombobox.setValue(accountType);
+            if (accountType.equals("DOCTOR")) {
+                this.specializationTextField.setText(user.get("specialization"));
+                this.specializationTextField.setVisible(true);
+            }
+            this.createUserButton.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("saveUser"));
+        } catch (SQLException ex) {
+            Logger.getLogger(AddUserController.class.getName()).log(Level.SEVERE, null, ex);
+            closeWindow();
         }
     }
 }
