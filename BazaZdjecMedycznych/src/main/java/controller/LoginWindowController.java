@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Common;
 import model.login.LoginProvider;
 
 /**
@@ -54,6 +55,7 @@ public class LoginWindowController extends Window {
         String resultOfLoging = loginProvider.connectToDatabase(usernameTextField.getText(), passwordTextField.getText());
         if (resultOfLoging.equals("Successful")) {
             Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
+            Common.COMMON.setLoggedUser(this.usernameTextField.getText());
             loginWindow.hide();
             showWindow("admin/MainWindowAdmin.fxml");
         }

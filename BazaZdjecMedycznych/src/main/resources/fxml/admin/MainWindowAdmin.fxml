@@ -11,8 +11,9 @@
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="manageUsersButton" mnemonicParsing="false" text="%manageUsers" />
-            <Button mnemonicParsing="false" text="%logout" />
-            <Label prefHeight="27.0" prefWidth="193.0" text="loggedAs" />
+            <Button fx:id="logoutButton" mnemonicParsing="false" text="%logout" />
+            <Label fx:id="loggedAsLabel" prefHeight="27.0" prefWidth="193.0" text="%loggedAs" />
+            <Label fx:id="infoLabel" />
          </children>
       </HBox>
    </top>

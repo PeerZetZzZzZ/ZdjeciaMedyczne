@@ -5,9 +5,6 @@
  */
 package model.login;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.ResourceBundleMaster;
 import model.db.DBConnector;
 import org.joda.time.DateTime;
@@ -75,5 +72,4 @@ public class LoginProvider {
     public boolean connectToApplication(String username, String password) {
         return true;
     }
-
 }

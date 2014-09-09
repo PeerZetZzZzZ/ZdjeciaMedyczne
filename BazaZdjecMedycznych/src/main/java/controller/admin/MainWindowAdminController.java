@@ -7,13 +7,20 @@ package controller.admin;
 
 import controller.Window;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Common;
+import model.ResourceBundleMaster;
 import model.StageMaster;
+import model.db.DBConnector;
 
 /**
  * FXML Controller class
@@ -26,6 +33,12 @@ public class MainWindowAdminController extends Window {
     private Button manageUsersButton;
     @FXML
     private BorderPane mainWindowAdminBorderPane;
+    @FXML
+    private Label loggedAsLabel;
+    @FXML
+    private Label infoLabel;
+    @FXML
+    private Button logoutButton;
 
     /**
      * Initializes the controller class.
@@ -37,8 +50,8 @@ public class MainWindowAdminController extends Window {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
-        this.stage = (Stage) this.manageUsersButton.getScene().getWindow();
         initButtons();
+        loggedAsLabel.setText(loggedAsLabel.getText() + " " + Common.COMMON.getLoggedUser());
 
     }
 
@@ -46,6 +59,11 @@ public class MainWindowAdminController extends Window {
         manageUsersButton.setOnAction((event) -> {
             showManageUserWindow();
         });
+
+        logoutButton.setOnAction((event) -> {
+            logoutAndClose();
+        });
+
     }
 
     private void showManageUserWindow() {
@@ -59,4 +77,25 @@ public class MainWindowAdminController extends Window {
         return mainWindowAdminBorderPane;
     }
 
+    protected void closeWindow() {
+        Stage stage = (Stage) this.manageUsersButton.getScene().getWindow();
+        stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
+    }
+
+    public void setWindowTitle(String title) {
+        Stage stage = (Stage) this.manageUsersButton.getScene().getWindow();
+        stage.setTitle(title);
+    }
+
+    public void logoutAndClose() {
+        try {
+            DBConnector.master.logout();
+            showWindow("LoginWindow.fxml");
+            Stage stage = (Stage) this.loggedAsLabel.getScene().getWindow();
+            stage.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowAdminController.class.getName()).log(Level.SEVERE, null, ex);
+            infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("connectionError"));
+        }
+    }
 }

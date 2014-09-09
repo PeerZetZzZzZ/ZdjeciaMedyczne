@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -28,7 +27,6 @@ public class Window implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
-    protected Stage stage;
     private Window controller;
 
     /**
@@ -58,11 +56,5 @@ public class Window implements Initializable {
         return controller;
     }
 
-    protected void closeWindow() {
-        stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
-    }
-
-    public void setWindowTitle(String title) {
-        stage.setTitle(title);
-    }
+ 
 }

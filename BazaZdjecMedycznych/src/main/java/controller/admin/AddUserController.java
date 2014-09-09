@@ -77,7 +77,6 @@ public class AddUserController extends Window {
         initButtons();
         this.specializationLabel.setVisible(false);
         this.specializationTextField.setVisible(false);
-        this.stage = (Stage) this.closeButton.getScene().getWindow();
 
         nameTextField.setText("Marek");
         surnameTextField.setText("Kulomb");
@@ -165,5 +164,15 @@ public class AddUserController extends Window {
             Logger.getLogger(AddUserController.class.getName()).log(Level.SEVERE, null, ex);
             closeWindow();
         }
+    }
+
+    protected void closeWindow() {
+        Stage stage = (Stage) this.closeButton.getScene().getWindow();
+        stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
+    }
+
+    public void setWindowTitle(String title) {
+        Stage stage = (Stage) this.closeButton.getScene().getWindow();
+        stage.setTitle(title);
     }
 }

@@ -18,10 +18,9 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,10 +29,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import model.Common;
 import model.ResourceBundleMaster;
-import model.StageMaster;
 import model.db.DBUsersManager;
-import model.enums.UserType;
 import model.tableentries.UserEntry;
 
 /**
@@ -68,6 +66,7 @@ public class ManageUsersController extends Window {
     private Button deleteUserButton;
     @FXML
     private Button unmarkAllButton;
+ 
     private DBUsersManager usersMaster = new DBUsersManager();
     int i = 0;
     ObservableList data = FXCollections.observableArrayList();
@@ -76,7 +75,6 @@ public class ManageUsersController extends Window {
 
     public void initialize(URL url, ResourceBundle rb) {
         rb = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
-        this.stage = (Stage) this.deleteUserButton.getScene().getWindow();
 
         initButtons();
         linkTableColumns();//after it we will can paste UserEntry to the table
@@ -164,13 +162,7 @@ public class ManageUsersController extends Window {
 
     private void initButtons() {
         addUserButton.setOnAction((event) -> {
-//            Parent manageUsersRoot = StageMaster.master.getRoot("admin/AddUser.fxml");
-//            if (manageUsersRoot != null) {
-//                FXMLLoader fxmlLoader = new FXMLLoader();
-//                Parent root = StageMaster.master.getRoot("admin/MainWindowAdmin.fxml");
             showWindow("admin/AddUser.fxml");
-
-//            }
         }
         );
         markAllButton.setOnAction(event -> {
@@ -192,7 +184,6 @@ public class ManageUsersController extends Window {
         deleteUserButton.setOnAction(event -> {
             if (!data.isEmpty()) {
                 List<String> usersToDelete = new ArrayList<String>();
-                List<Object> usersToDeleteData = new ArrayList<Object>();
                 for (Object user : data) {
                     UserEntry userEntry = (UserEntry) user;
                     if (userEntry.getSelected()) {
@@ -211,6 +202,16 @@ public class ManageUsersController extends Window {
                 }
             }
         });
+    }
+
+    protected void closeWindow() {
+        Stage stage = (Stage) this.deleteUserButton.getScene().getWindow();
+        stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
+    }
+
+    public void setWindowTitle(String title) {
+        Stage stage = (Stage) this.deleteUserButton.getScene().getWindow();
+        stage.setTitle(title);
     }
 
 }

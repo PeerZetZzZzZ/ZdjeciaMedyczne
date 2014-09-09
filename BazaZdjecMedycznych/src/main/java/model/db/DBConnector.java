@@ -215,4 +215,8 @@ public class DBConnector {
         createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.TECHNICIAN);
         createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.PATIENT);
     }
+    
+    public void logout() throws SQLException{
+        this.con.close();
+    }
 }
