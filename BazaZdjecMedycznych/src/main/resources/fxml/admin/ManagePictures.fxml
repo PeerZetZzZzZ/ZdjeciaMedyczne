@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="managePicturesBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.admin.ManagePicturesController">
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="addPictureButton" mnemonicParsing="false" text="%addPicture" />
+            <Button fx:id="deletePictureButton" mnemonicParsing="false" text="%deletePicture" />
+            <Button fx:id="markAllButton" mnemonicParsing="false" text="%markAll" />
+            <Button fx:id="unmarkAllButton" mnemonicParsing="false" text="%unmarkAll" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TableView fx:id="usersTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="usernameTableColumn" prefWidth="110.0" text="%username" />
+            <TableColumn fx:id="pictureTableColumn" prefWidth="101.0" text="%picture" />
+            <TableColumn fx:id="pictureTypeTableColumn" prefWidth="120.0" text="%pictureType" />
+            <TableColumn fx:id="buttonTableColumn" minWidth="160.0" prefWidth="160.0" resizable="false" />
+            <TableColumn fx:id="checkboxTableColumn" prefWidth="115.0" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

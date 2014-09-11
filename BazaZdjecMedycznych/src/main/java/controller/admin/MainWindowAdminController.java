@@ -39,6 +39,8 @@ public class MainWindowAdminController extends Window {
     private Label infoLabel;
     @FXML
     private Button logoutButton;
+    @FXML
+    private Button managePicturesButton;
 
     /**
      * Initializes the controller class.
@@ -63,7 +65,9 @@ public class MainWindowAdminController extends Window {
         logoutButton.setOnAction((event) -> {
             logoutAndClose();
         });
-
+        managePicturesButton.setOnAction(event->{
+            showManagePicturesWindow();
+        });
     }
 
     private void showManageUserWindow() {
@@ -72,7 +76,12 @@ public class MainWindowAdminController extends Window {
             this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
         }
     }
-
+     private void showManagePicturesWindow() {
+        Parent manageUsersRoot = StageMaster.master.getRoot("admin/ManagePictures.fxml");
+        if (manageUsersRoot != null) {
+            this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
+        }
+    }
     public BorderPane getBorderPane() {
         return mainWindowAdminBorderPane;
     }
