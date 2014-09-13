@@ -2,44 +2,104 @@ package controller.technician;
 
 import controller.Window;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import model.Common;
+import model.ResourceBundleMaster;
 import model.StageMaster;
+import model.db.DBConnector;
 
+/**
+ * FXML Controller class
+ *
+ * @author peer
+ */
 public class MainWindowTechnicianController extends Window {
 
     @FXML
-    private Button picturesCatalogButton;
+    private Button manageUsersButton;
     @FXML
     private BorderPane borderPaneMainWindowTechnician;
-    PicturesCatalogController picturesController = new PicturesCatalogController();
+    @FXML
+    private Label loggedAsLabel;
+    @FXML
+    private Label infoLabel;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private Button managePicturesButton;
 
+    /**
+     * Initializes the controller class.
+     */
     public MainWindowTechnicianController() {
         super();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        super.initialize(url, rb);
         initButtons();
+        loggedAsLabel.setText(loggedAsLabel.getText() + " " + Common.COMMON.getLoggedUser());
 
     }
 
     private void initButtons() {
-        picturesCatalogButton.setOnAction((event) -> {
-            fillMiddle();
+        manageUsersButton.setOnAction((event) -> {
+            showManageUserWindow();
+        });
+
+        logoutButton.setOnAction((event) -> {
+            logoutAndClose();
+        });
+        managePicturesButton.setOnAction(event->{
+            showAddPictureController();
         });
     }
 
-    private void fillMiddle() {
-        Parent picturesCatalogRoot = StageMaster.master.getRoot("technician/PicturesCatalog.fxml");
-        if (picturesCatalogRoot != null) {
-            this.borderPaneMainWindowTechnician.setCenter(picturesCatalogRoot);
+    private void showManageUserWindow() {
+        Parent manageUsersRoot = StageMaster.master.getRoot("admin/ManageUsers.fxml");
+        if (manageUsersRoot != null) {
+            this.borderPaneMainWindowTechnician.setCenter(manageUsersRoot);
         }
-        //picturesCatalogStage.show();
+    }
+     private void showAddPictureController() {
+        Parent manageUsersRoot = StageMaster.master.getRoot("technician/AddPicture.fxml");
+        if (manageUsersRoot != null) {
+            this.borderPaneMainWindowTechnician.setCenter(manageUsersRoot);
+        }
+    }
+    public BorderPane getBorderPane() {
+        return borderPaneMainWindowTechnician;
     }
 
+    protected void closeWindow() {
+        Stage stage = (Stage) this.manageUsersButton.getScene().getWindow();
+        stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
+    }
+
+    public void setWindowTitle(String title) {
+        Stage stage = (Stage) this.manageUsersButton.getScene().getWindow();
+        stage.setTitle(title);
+    }
+
+    public void logoutAndClose() {
+        try {
+            DBConnector.master.logout();
+            showWindow("LoginWindow.fxml");
+            Stage stage = (Stage) this.loggedAsLabel.getScene().getWindow();
+            stage.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowTechnicianController.class.getName()).log(Level.SEVERE, null, ex);
+            infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("connectionError"));
+        }
+    }
 }

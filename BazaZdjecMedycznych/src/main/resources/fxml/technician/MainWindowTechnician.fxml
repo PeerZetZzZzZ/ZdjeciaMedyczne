@@ -6,13 +6,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="borderPaneMainWindowTechnician" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.technician.MainWindowTechnicianController">
+<BorderPane fx:id="borderPaneMainWindowTechnician" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="571.0" prefWidth="969.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.technician.MainWindowTechnicianController">
    <top>
-      <HBox fx:id="picturesCatalog" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="picturesCatalogButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="146.0" text="%picturesCatalog" />
-            <Button fx:id="patientsCatalogButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="146.0" text="%patientsCatalog" />
-            <Button fx:id="logoutButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="145.0" text="%logout" textAlignment="JUSTIFY" />
+            <Button fx:id="manageUsersButton" mnemonicParsing="false" text="%manageUsers" />
+            <Button fx:id="managePicturesButton" mnemonicParsing="false" text="%managePictures" />
+            <Button fx:id="logoutButton" mnemonicParsing="false" text="%logout" />
+            <Label fx:id="loggedAsLabel" prefHeight="27.0" prefWidth="193.0" text="%loggedAs" />
+            <Label fx:id="infoLabel" />
          </children>
       </HBox>
    </top>

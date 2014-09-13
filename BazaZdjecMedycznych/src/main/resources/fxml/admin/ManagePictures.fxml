@@ -10,7 +10,6 @@
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addPictureButton" mnemonicParsing="false" text="%addPicture" />
             <Button fx:id="deletePictureButton" mnemonicParsing="false" text="%deletePicture" />
             <Button fx:id="markAllButton" mnemonicParsing="false" text="%markAll" />
             <Button fx:id="unmarkAllButton" mnemonicParsing="false" text="%unmarkAll" />
@@ -25,6 +24,7 @@
             <TableColumn fx:id="pictureTypeTableColumn" prefWidth="120.0" text="%pictureType" />
             <TableColumn fx:id="buttonTableColumn" minWidth="160.0" prefWidth="160.0" resizable="false" />
             <TableColumn fx:id="checkboxTableColumn" prefWidth="115.0" />
+            <TableColumn fx:id="tableColumnManagePictures" prefWidth="75.0" />
         </columns>
       </TableView>
    </center>

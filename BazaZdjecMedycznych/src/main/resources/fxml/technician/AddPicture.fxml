@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.technician.AddPictureController">
+   <center>
+      <TableView fx:id="tableViewPictures" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="id" />
+          <TableColumn fx:id="tableColumnCaptureDatetime" prefWidth="75.0" text="%captureDatetime" />
+            <TableColumn fx:id="tableColumnUsername" prefWidth="75.0" text="%username" />
+            <TableColumn fx:id="tableColumnTechnicianUsername" prefWidth="75.0" text="%technicianUsername" />
+            <TableColumn fx:id="tableColumnDoctorUsername" prefWidth="75.0" text="%doctorUsername" />
+            <TableColumn fx:id="tableColumnBodyPart" prefWidth="75.0" text="%bodyPart" />
+            <TableColumn fx:id="tableColumnPictureType" prefWidth="75.0" text="%pictureType" />
+            <TableColumn fx:id="tableColumnEditButton" prefWidth="75.0" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <HBox fx:id="" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="buttonAddPicture" mnemonicParsing="false" text="%addPicture" />
+            <Button fx:id="buttonDeletePicture" mnemonicParsing="false" text="%deletePicture" />
+            <Button fx:id="buttonMarkAll" mnemonicParsing="false" text="%markAll" />
+            <Button fx:id="buttonUnmarkAll" mnemonicParsing="false" text="%unmarkAll" />
+         </children>
+      </HBox>
+   </top>
+</BorderPane>

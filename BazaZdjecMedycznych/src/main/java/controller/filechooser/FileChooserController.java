@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,7 +58,7 @@ public class FileChooserController extends Window {
                     public void handle(final ActionEvent e) {
                         File file = fileChooser.showOpenDialog(stage);
                         if (file != null) {
-                            openFile(file);
+//                            op;;/oenFile(file);
                         }
                     }
                 });

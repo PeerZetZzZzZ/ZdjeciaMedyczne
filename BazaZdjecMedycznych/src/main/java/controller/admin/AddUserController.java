@@ -63,6 +63,7 @@ public class AddUserController extends Window {
     private String username;
     private String password;
     private UserType usertype;
+    boolean userEdition = false;//if it's true, we should not insert user but edit him ;)
 
     public AddUserController() {
         super();
@@ -121,10 +122,17 @@ public class AddUserController extends Window {
     private void addNewUser() {
         try {
             if (genderCombobox.getValue() != null && accountTypeCombobox.getValue() != null) {
-                usersMaster.createUser(nameTextField.getText(), surnameTextField.getText(), genderCombobox.getValue().toString(),
-                        ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
-                        accountTypeCombobox.getValue().toString());
-                infoLabel.setText("User " + usernameTextField.getText() + " added!");
+                if (!userEdition) {
+                    usersMaster.createUser(nameTextField.getText(), surnameTextField.getText(), genderCombobox.getValue().toString(),
+                            ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
+                            accountTypeCombobox.getValue().toString());
+                    infoLabel.setText("User " + usernameTextField.getText() + " added!");
+                } else {
+                    usersMaster.editUser(usernameTextField.getText(), nameTextField.getText(), surnameTextField.getText(), ageTextField.getText(), genderCombobox.getValue().toString(),
+                             specializationTextField.getText(),
+                            accountTypeCombobox.getValue().toString());
+                    infoLabel.setText("User " + usernameTextField.getText() + " added!");
+                }
             } else {
                 infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("provideValues"));
             }
@@ -145,6 +153,7 @@ public class AddUserController extends Window {
 
     public void fillValuesWithUser(String username) {
         try {
+            userEdition = true;
             HashMap<String, String> user = usersMaster.getUserValues(username);
             this.nameTextField.setText(user.get("name"));
             this.surnameTextField.setText(user.get("surname"));
@@ -174,5 +183,8 @@ public class AddUserController extends Window {
     public void setWindowTitle(String title) {
         Stage stage = (Stage) this.closeButton.getScene().getWindow();
         stage.setTitle(title);
+    }
+    public Stage getStage(){
+        return (Stage) this.closeButton.getScene().getWindow();
     }
 }

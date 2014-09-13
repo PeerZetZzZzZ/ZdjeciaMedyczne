@@ -6,6 +6,7 @@
 package controller.admin;
 
 import controller.Window;
+import controller.technician.AddPictureController;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -61,6 +62,8 @@ public class ManageUsersController extends Window {
     @FXML
     private TableColumn buttonTableColumn;
     @FXML
+    private TableColumn tableColumnManagePictures;
+    @FXML
     private Button markAllButton;
     @FXML
     private Button deleteUserButton;
@@ -68,7 +71,6 @@ public class ManageUsersController extends Window {
     private Button unmarkAllButton;
  
     private DBUsersManager usersMaster = new DBUsersManager();
-    int i = 0;
     ObservableList data = FXCollections.observableArrayList();
 
     @Override
@@ -119,13 +121,45 @@ public class ManageUsersController extends Window {
                                 button.setMinWidth(160);
                                 button.setVisible(true);
                                 setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
-//                                System.out.println(param.
                                 button.setOnAction(event -> {
-                                    System.out.println(item);
                                     AddUserController controller = (AddUserController) showWindow("admin/AddUser.fxml");
                                     controller.fillValuesWithUser(item);
-//                                    controller.
+                                    controller.getStage().setOnCloseRequest(close ->{
+                                        fillUsersTable();
+                                    });
 
+                                });
+                            }
+                        }
+
+                    }
+
+                };
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            }
+
+        });
+        tableColumnManagePictures.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("username"));
+        tableColumnManagePictures.setCellFactory(new Callback<TableColumn<UserEntry, String>, TableCell<UserEntry, String>>() {
+
+            @Override
+            public TableCell<UserEntry, String> call(TableColumn<UserEntry, String> param) {
+                TableCell<UserEntry, String> cell = new TableCell<UserEntry, String>() {
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        final Button button = new Button(ResourceBundleMaster.TRANSLATOR.getTranslation("managePictures"));
+
+                        {
+                            if (!empty) {
+                                button.setMinWidth(160);
+                                button.setVisible(true);
+                                setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
+                                button.setOnAction(event -> {
+                                    Common.COMMON.setUsernameOfPictures(item);
+                                    AddPictureController controller = (AddPictureController) showWindow("technician/AddPicture.fxml");
                                 });
                             }
                         }

@@ -5,6 +5,7 @@
  */
 package model.login;
 
+import java.sql.SQLException;
 import model.ResourceBundleMaster;
 import model.db.DBConnector;
 import org.joda.time.DateTime;
@@ -38,7 +39,7 @@ public class LoginProvider {
      * @return "successful" in case of success and punishment time left in case
      * of not success
      */
-    public String connectToDatabase(String username, String password) {
+    public String connectToDatabase(String username, String password) throws SQLException {
         boolean result = connector.createDatabaseAdminConnection();//first we 
         if (result) {
             if (username != null && password != null) {

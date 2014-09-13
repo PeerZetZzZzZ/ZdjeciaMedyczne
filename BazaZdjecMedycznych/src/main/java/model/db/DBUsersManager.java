@@ -198,7 +198,7 @@ public class DBUsersManager {
             userValues.put("username", set.getString("username"));
             userValues.put("password", set.getString("password"));
             String accountType = set.getString("account_type");
-            userValues.put("account_type",accountType);
+            userValues.put("account_type", accountType);
             switch (accountType) {
                 case "ADMIN":
                     ResultSet adminValues = statement.executeQuery("SELECT * FROM MedicalPictures.Admin WHERE username='" + username + "'");
@@ -242,5 +242,35 @@ public class DBUsersManager {
             }
         }
         return userValues;
+    }
+
+    public void editUser(String username, String name, String surname, String age, String gender, String specialization, String usertype) throws SQLException, RegexException {
+        HashMap<String, String> existingUser = getUserValues(username);
+        String accountType = existingUser.get("account_type");
+        switch (accountType) {
+            case "ADMIN":
+                queryRunner.update(connection,"DELETE FROM MedicalPictures.Admin WHERE username=?", username);
+                break;
+            case "TECHNICIAN":
+                queryRunner.update(connection,"DELETE FROM MedicalPictures.Technician WHERE username=?", username);
+                break;
+            case "PATIENT":
+                queryRunner.update(connection,"DELETE FROM MedicalPictures.Patient WHERE username=?", username);
+                break;
+            case "DOCTOR":
+                queryRunner.update(connection,"DELETE FROM MedicalPictures.Doctor WHERE username=?", username);
+                break;
+                
+        }
+        queryRunner.update(connection,"UPDATE MedicalPictures.UsersDB SET account_type=? WHERE username=?",usertype, username);
+        patternChecker.verifyUser(username);
+        patternChecker.verifySingleWord(name);
+        patternChecker.verifySingleWord(surname);
+        patternChecker.verifySingleNumber(age);
+        if (usertype.equals("DOCTOR")) {
+            patternChecker.verifySingleWord(specialization);
+        }
+        patternChecker.verifySingleWord(gender);
+        createPerson(username, name, surname, age, gender, specialization, usertype);
     }
 }

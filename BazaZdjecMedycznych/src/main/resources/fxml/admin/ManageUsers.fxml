@@ -25,6 +25,7 @@
             <TableColumn fx:id="accountTypeTableColumn" prefWidth="120.0" text="%accountType" />
             <TableColumn fx:id="buttonTableColumn" minWidth="160.0" prefWidth="160.0" resizable="false" />
             <TableColumn fx:id="checkboxTableColumn" prefWidth="115.0" />
+            <TableColumn fx:id="tableColumnManagePictures" prefWidth="75.0" text="Column X" />
         </columns>
       </TableView>
    </center>

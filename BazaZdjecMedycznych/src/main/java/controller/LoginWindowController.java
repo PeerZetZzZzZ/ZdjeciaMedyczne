@@ -5,7 +5,10 @@ package controller;
  * and open the template in the editor.
  */
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -52,16 +55,20 @@ public class LoginWindowController extends Window {
     }
 
     private void loginToDatabase() {
-        String resultOfLoging = loginProvider.connectToDatabase(usernameTextField.getText(), passwordTextField.getText());
-        if (resultOfLoging.equals("Successful")) {
-            Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
-            Common.COMMON.setLoggedUser(this.usernameTextField.getText());
-            loginWindow.hide();
-            showWindow("admin/MainWindowAdmin.fxml");
+        try {
+            String resultOfLoging = loginProvider.connectToDatabase(usernameTextField.getText(), passwordTextField.getText());
+            if (resultOfLoging.equals("Successful")) {
+                Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
+                Common.COMMON.setLoggedUser(this.usernameTextField.getText());
+                loginWindow.hide();
+                showWindow("technician/MainWindowTechnician.fxml");
+            }
+            clearTextFields();
+            
+            errorLabel.setText(resultOfLoging);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        clearTextFields();
-
-        errorLabel.setText(resultOfLoging);
     }
 
     private void clearTextFields() {

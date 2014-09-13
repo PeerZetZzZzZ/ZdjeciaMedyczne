@@ -6,7 +6,6 @@
 package controller.admin;
 
 import controller.Window;
-import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import model.Common;
 import model.ResourceBundleMaster;
 import model.db.DBUsersManager;
 import model.tableentries.UserEntry;
@@ -53,13 +53,13 @@ public class ManagePicturesController extends Window {
     @FXML
     private TableColumn pictureTypeTableColumn;
     @FXML
-    private Button addPictureButton;
-    @FXML
     private BorderPane manageUsersBorderPane;
     @FXML
     private TableColumn checkboxTableColumn;
     @FXML
     private TableColumn buttonTableColumn;
+    @FXML
+    private TableColumn tableColumnManagePictures;
     @FXML
     private Button markAllButton;
     @FXML
@@ -77,7 +77,7 @@ public class ManagePicturesController extends Window {
         rb = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
 
         initButtons();
-        linkTableColumns();//after it we will can paste UserEntry to the table
+        linkTableColumns();//after it we will can paste PictureEntry in the table
         fillUsersTable();
     }
 
@@ -119,12 +119,10 @@ public class ManagePicturesController extends Window {
                                 button.setMinWidth(160);
                                 button.setVisible(true);
                                 setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
-//                                System.out.println(param.
                                 button.setOnAction(event -> {
                                     System.out.println(item);
                                     AddUserController controller = (AddUserController) showWindow("admin/AddUser.fxml");
                                     controller.fillValuesWithUser(item);
-//                                    controller.
 
                                 });
                             }
@@ -138,6 +136,7 @@ public class ManagePicturesController extends Window {
             }
 
         });
+   
         checkboxTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, Boolean>("selected"));
         checkboxTableColumn.setCellFactory(new Callback<TableColumn<UserEntry, Boolean>, TableCell<UserEntry, Boolean>>() {
 
@@ -161,15 +160,6 @@ public class ManagePicturesController extends Window {
     }
 
     private void initButtons() {
-        addPictureButton.setOnAction((event) -> {
-            Stage stage = new Stage();
-            List<File> file = fileChooser.showOpenMultipleDialog(stage);
-            for(File fil:file){
-                System.out.println(fil.getAbsolutePath());
-            }
-
-        }
-        );
         markAllButton.setOnAction(event -> {
             if (!data.isEmpty()) {
                 for (Object user : data) {
