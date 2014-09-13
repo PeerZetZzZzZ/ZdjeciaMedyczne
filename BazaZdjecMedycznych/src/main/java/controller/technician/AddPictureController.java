@@ -55,7 +55,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class AddPictureController extends Window {
 
     @FXML
-    private TableColumn tableColumnId;
+    private TableColumn tableColumnPictureName;
     @FXML
     private TableColumn tableColumnCaptureDatetime;
     @FXML
@@ -153,7 +153,7 @@ public class AddPictureController extends Window {
         });
     }
 
-    private void fillPicturesTable() {
+    private void fillPicturesTable() throws SQLException {
         pictureManager.updateResultSet();//reading all users
         data.clear();
         dataTemporary.stream().forEach((picture) -> {
@@ -164,12 +164,13 @@ public class AddPictureController extends Window {
         HashMap<String, String> capture_times = pictureManager.readCapture_datetimes();
         HashMap<String, String> usernames = pictureManager.readUsernames();
         HashMap<String, String> technician_usernames = pictureManager.readTechnician_usernames();
-        HashMap<String, String> doctor_names = pictureManager.readDoctor_usernames();
+        HashMap<String, String> doctor_names = pictureManager.readDoctor_names();
         HashMap<String, String> body_parts = pictureManager.readBody_parts();
         HashMap<String, String> picture_types = pictureManager.readPicture_types();
         Set<String> idsOfRow = ids.keySet();
         for (String id : idsOfRow) { //from 1 because we use id in table from 1
             String picture_name = picture_names.get(id);
+            System.out.println("Picture name "  +picture_name);
             String capture_time = capture_times.get(id);
             String username = usernames.get(id);
             String technician_username = technician_usernames.get(id);
@@ -187,8 +188,8 @@ public class AddPictureController extends Window {
     }
 
     private void linkTableColumns() {
-        tableColumnId.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("id"));
         tableColumnCaptureDatetime.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("capture_datetime"));
+        tableColumnPictureName.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("picture_name"));
         tableColumnUsername.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("username"));
         tableColumnTechnicianUsername.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("technician_username"));
         tableColumnDoctorUsername.setCellValueFactory(new PropertyValueFactory<PictureEntry, String>("doctor_name"));

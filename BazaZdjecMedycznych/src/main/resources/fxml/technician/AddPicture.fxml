@@ -10,7 +10,7 @@
    <center>
       <TableView fx:id="tableViewPictures" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="tableColumnId" prefWidth="108.0" text="id" />
+          <TableColumn fx:id="tableColumnPictureName" prefWidth="108.0" text="%pictureName" />
           <TableColumn fx:id="tableColumnCaptureDatetime" prefWidth="98.0" text="%captureDatetime" />
             <TableColumn fx:id="tableColumnUsername" prefWidth="111.0" text="%username" />
             <TableColumn fx:id="tableColumnTechnicianUsername" prefWidth="119.0" text="%technicianUsername" />

@@ -51,7 +51,7 @@ public class PictureEntry {
         return id.get();
     }
 
-    public String getPictureName() {
+    public String getPicture_name() {
         return picture_name.get();
     }
 

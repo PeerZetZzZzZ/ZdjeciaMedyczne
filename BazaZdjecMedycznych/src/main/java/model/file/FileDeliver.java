@@ -29,7 +29,7 @@ public class FileDeliver {
 
     private void getDataFromFiles(List<File> fileList) throws FileNotFoundException, FileTooBigException, IOException {
         for (File file : fileList) {
-            if (verifyFilExtension(file.getAbsolutePath())) {
+            if (verifyFileExtension(file.getAbsolutePath())) {
                 long fileLength = file.length();
                 if (fileLength > (1024 * 1024 * 10)) {
                     throw new FileTooBigException(ResourceBundleMaster.TRANSLATOR.getTranslation("fileTooBig"));
@@ -39,7 +39,7 @@ public class FileDeliver {
         }
     }
 
-    private boolean verifyFilExtension(String filePath) {
+    private boolean verifyFileExtension(String filePath) {
         String extension = FilenameUtils.getExtension(filePath);
         for (String allowedExtension : extensionList) {
             if (extension.equals(allowedExtension)) {

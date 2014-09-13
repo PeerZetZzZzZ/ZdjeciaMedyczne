@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -32,9 +34,10 @@ public class DBPicturesManager {
     private HashMap<String, String> usernameMap = new HashMap<String, String>();
     private HashMap<String, String> technician_usernameMap = new HashMap<String, String>();
     private HashMap<String, String> doctor_usernameMap = new HashMap<String, String>();
+    private HashMap<String, String> doctor_nameMap = new HashMap<String, String>();
     private HashMap<String, String> body_partMap = new HashMap<String, String>();
     private HashMap<String, String> picture_typeMap = new HashMap<String, String>();
-    private ResultSet usersDbSet;
+    private ResultSet picturesDbSet;
     /**
      * Used for checking if the input values are correct, before inserting them
      * to DB.
@@ -48,7 +51,6 @@ public class DBPicturesManager {
     private DBManagerCommon commonManager = new DBManagerCommon();
 
     public DBPicturesManager() {
-        updateResultSet();
     }
 
     public int checkLinesAmountInTable(String tableName) {
@@ -85,10 +87,12 @@ public class DBPicturesManager {
             if (!idsMap.isEmpty()) {
                 idsMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                idsMap.put(usersDbSet.getString("id"), usersDbSet.getString("id"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                idsMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("id"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,18 +100,21 @@ public class DBPicturesManager {
     }
 
     public HashMap<String, String> readPicture_names() {
-        if (!usernameMap.isEmpty()) {
-            usernameMap.clear();
+        if (!picture_namesMap.isEmpty()) {
+            picture_namesMap.clear();
         }
         try {
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                usernameMap.put(usersDbSet.getString("id"), usersDbSet.getString("picture_name"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                String name = picturesDbSet.getString("picture_name");
+                picture_namesMap.put(picturesDbSet.getString("id"), name);
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return usernameMap;
+        return picture_namesMap;
     }
 
     public HashMap<String, String> readUsernames() {
@@ -115,10 +122,12 @@ public class DBPicturesManager {
             usernameMap.clear();
         }
         try {
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                usernameMap.put(usersDbSet.getString("id"), usersDbSet.getString("username"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                usernameMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("username"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -130,10 +139,12 @@ public class DBPicturesManager {
             if (!capture_datetimedMap.isEmpty()) {
                 capture_datetimedMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                capture_datetimedMap.put(usersDbSet.getString("id"), usersDbSet.getString("capture_datetime"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                capture_datetimedMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("capture_datetime"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,10 +156,12 @@ public class DBPicturesManager {
             if (!technician_usernameMap.isEmpty()) {
                 technician_usernameMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                technician_usernameMap.put(usersDbSet.getString("id"), usersDbSet.getString("technician_username"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                technician_usernameMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("technician_username"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -160,10 +173,12 @@ public class DBPicturesManager {
             if (!doctor_usernameMap.isEmpty()) {
                 doctor_usernameMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                doctor_usernameMap.put(usersDbSet.getString("id"), usersDbSet.getString("doctor_username"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                doctor_usernameMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("doctor_username"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -175,14 +190,43 @@ public class DBPicturesManager {
             if (!body_partMap.isEmpty()) {
                 body_partMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                body_partMap.put(usersDbSet.getString("id"), usersDbSet.getString("body_part"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                body_partMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("body_part"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return body_partMap;
+    }
+
+    public HashMap<String, String> readDoctor_names() throws SQLException {
+        if (!doctor_nameMap.isEmpty()) {
+            doctor_nameMap.clear();
+        }
+        updateResultSet();
+        picturesDbSet.beforeFirst();
+            HashMap<String,String> idAndDoctorUsernames = new HashMap<>();
+        while (picturesDbSet.next()) {
+            idAndDoctorUsernames.put(picturesDbSet.getString("id"),picturesDbSet.getString("doctor_username"));
+        }
+        Set<String> keySet = idAndDoctorUsernames.keySet();
+        for (String key : keySet) {
+        String doctor_username = idAndDoctorUsernames.get(key);//we get id of the picture
+            ResultSet doctor = statement.executeQuery("SELECT DISTINCT(name), surname FROM MedicalPictures.Doctor JOIN MedicalPictures.Picture ON \n"
+                    + "doctor_username ='" + doctor_username + "'");
+            if (doctor.next()) {
+                String name = doctor.getString("name");
+                String surname = doctor.getString("surname");
+                String doctor_name = doctor_username + " " + name + " " + surname;
+                doctor_nameMap.put(key, doctor_name);
+                doctor.close();
+            }
+        }
+        picturesDbSet.close();
+        return doctor_nameMap;
     }
 
     public HashMap<String, String> readPicture_types() {
@@ -190,10 +234,12 @@ public class DBPicturesManager {
             if (!picture_typeMap.isEmpty()) {
                 picture_typeMap.clear();
             }
-            usersDbSet.beforeFirst();
-            while (usersDbSet.next()) {
-                picture_typeMap.put(usersDbSet.getString("id"), usersDbSet.getString("picture_type"));
+            updateResultSet();
+            picturesDbSet.beforeFirst();
+            while (picturesDbSet.next()) {
+                picture_typeMap.put(picturesDbSet.getString("id"), picturesDbSet.getString("picture_type"));
             }
+            picturesDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -203,7 +249,7 @@ public class DBPicturesManager {
     public void updateResultSet() {
         try {
             String username = Common.COMMON.getUsernameOfPictures();
-            usersDbSet = readAllPicturesFromUsersDB(username);
+            picturesDbSet = readAllPicturesFromUsersDB(username);
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -211,61 +257,9 @@ public class DBPicturesManager {
     }
 
     private ResultSet readAllPicturesFromUsersDB(String username) throws SQLException {
-        ResultSet pictures = statement.executeQuery("SELECT * FROM MedicalPictures.Picture WHERE username='" + username + "'");
+        ResultSet pictures = statement.executeQuery("SELECT id,picture_name,capture_datetime,"
+                + "username,technician_username,doctor_username,body_part,picture_type,picture_description FROM MedicalPictures.Picture WHERE username='" + username + "'");
         return pictures;
-    }
-
-    public HashMap<String, String> getUserValues(String username) throws SQLException {
-        ResultSet set = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE username='" + username + "'");
-        HashMap<String, String> userValues = new HashMap<String, String>();
-        if (set.first()) {
-            userValues.put("username", set.getString("username"));
-            userValues.put("password", set.getString("password"));
-            String accountType = set.getString("account_type");
-            userValues.put("account_type", accountType);
-            switch (accountType) {
-                case "ADMIN":
-                    ResultSet adminValues = statement.executeQuery("SELECT * FROM MedicalPictures.Admin WHERE username='" + username + "'");
-                    if (adminValues.first()) {
-                        userValues.put("name", adminValues.getString("name"));
-                        userValues.put("surname", adminValues.getString("surname"));
-                        userValues.put("sex", adminValues.getString("sex"));
-                        userValues.put("age", adminValues.getString("age"));
-                    }
-                    break;
-                case "TECHNICIAN":
-                    ResultSet technicianValues = statement.executeQuery("SELECT * FROM MedicalPictures.Technician WHERE username='" + username + "'");
-                    if (technicianValues.first()) {
-                        userValues.put("name", technicianValues.getString("name"));
-                        userValues.put("surname", technicianValues.getString("surname"));
-                        userValues.put("sex", technicianValues.getString("sex"));
-                        userValues.put("age", technicianValues.getString("age"));
-                    }
-                    break;
-                case "DOCTOR":
-                    ResultSet doctorValues = statement.executeQuery("SELECT * FROM MedicalPictures.Doctor WHERE username='" + username + "'");
-                    if (doctorValues.first()) {
-                        userValues.put("name", doctorValues.getString("name"));
-                        userValues.put("surname", doctorValues.getString("surname"));
-                        userValues.put("sex", doctorValues.getString("sex"));
-                        userValues.put("age", doctorValues.getString("age"));
-                        userValues.put("specialization", doctorValues.getString("specialization"));
-
-                    }
-                    break;
-                case "PATIENT":
-                    ResultSet patientValues = statement.executeQuery("SELECT * FROM MedicalPictures.Patient WHERE username='" + username + "'");
-                    if (patientValues.first()) {
-                        userValues.put("name", patientValues.getString("name"));
-                        userValues.put("surname", patientValues.getString("surname"));
-                        userValues.put("sex", patientValues.getString("sex"));
-                        userValues.put("age", patientValues.getString("age"));
-
-                    }
-                    break;
-            }
-        }
-        return userValues;
     }
 
     public void updatePictures(ObservableList data, HashMap<String, String> fileData) throws SQLException, PictureDataException {
@@ -280,7 +274,7 @@ public class DBPicturesManager {
             PictureEntry picture = (PictureEntry) pictureObject;
             if (picture.justAdded) {//we dont want to add pictures which already are in DB
                 if (picture.getSelected()) {//we want to add only pictures that are selected
-                    String pictureName = picture.getPictureName();
+                    String pictureName = picture.getPicture_name();
                     String capture_datetime = picture.getCapture_datetime();
                     String doctor_username = commonManager.getDoctorUsername(picture.getDoctor_name());
                     String pictureData = fileData.get(pictureName);
@@ -300,8 +294,29 @@ public class DBPicturesManager {
                             picture_type,
                             description);
                 }
+            } else {
+                String id = picture.getId();
+                if (checkIfPictureExist(id)) {//if it exists we must update it
+                    String doctor_username = commonManager.getDoctorUsername(picture.getDoctor_name());
+                    String body_part = picture.getBody_part();
+                    String picture_type = picture.getPicture_type();
+                    queryRunner.update(connection, "UPDATE MedicalPictures.Picture SET doctor_username=?, body_part=?,picture_type=? "
+                            + "WHERE id=?",
+                            doctor_username,
+                            body_part,
+                            picture_type,
+                            id);
+                }
             }
         }
+    }
+
+    private boolean checkIfPictureExist(String pictureId) throws SQLException {
+        ResultSet id = statement.executeQuery("SELECT id FROM MedicalPictures.Picture WHERE id='" + pictureId + "'");
+        if (id.first()) {
+            return true;
+        }
+        return false;
     }
 
     private void deletePictures(ObservableList data) throws SQLException {
@@ -309,8 +324,8 @@ public class DBPicturesManager {
             PictureEntry picture = (PictureEntry) pictureObject;
             if (!picture.getSelected()) {//we dont want to add pictures which already are in DB
                 if (!picture.justAdded) {//if just added we will make with them nothing, cause they are not in DB
-                    String username = picture.getUsername();
-                    queryRunner.update(connection, "DELETE FROM MedicalPictures.Picture WHERE username=?", username);
+                    String pictureId = picture.getId();
+                    queryRunner.update(connection, "DELETE FROM MedicalPictures.Picture WHERE id=?", pictureId);
                 }
             }
         }
@@ -329,4 +344,5 @@ public class DBPicturesManager {
             }
         }
     }
+
 }
