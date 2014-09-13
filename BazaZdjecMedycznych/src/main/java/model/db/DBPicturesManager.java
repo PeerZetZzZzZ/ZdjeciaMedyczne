@@ -8,9 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import model.Common;
+import model.ResourceBundleMaster;
+import model.exception.PictureDataException;
 import model.exception.RegexException;
 import model.regex.RegexPatternChecker;
+import model.tableentries.PictureEntry;
 import org.apache.commons.dbutils.QueryRunner;
 
 /**
@@ -23,6 +27,7 @@ public class DBPicturesManager {
     private Statement statement = DBConnector.master.getStatement();
     private QueryRunner queryRunner = DBConnector.master.getQueryRunner();//for easy quries
     private HashMap<String, String> idsMap = new HashMap<String, String>();
+    private HashMap<String, String> picture_namesMap = new HashMap<String, String>();
     private HashMap<String, String> capture_datetimedMap = new HashMap<String, String>();
     private HashMap<String, String> usernameMap = new HashMap<String, String>();
     private HashMap<String, String> technician_usernameMap = new HashMap<String, String>();
@@ -40,6 +45,7 @@ public class DBPicturesManager {
      * Patient,Doctor,Admin,Technician tables
      */
     private int userInsertIndex = 1;
+    private DBManagerCommon commonManager = new DBManagerCommon();
 
     public DBPicturesManager() {
         updateResultSet();
@@ -87,6 +93,21 @@ public class DBPicturesManager {
             Logger.getLogger(DBPicturesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idsMap;
+    }
+
+    public HashMap<String, String> readPicture_names() {
+        if (!usernameMap.isEmpty()) {
+            usernameMap.clear();
+        }
+        try {
+            usersDbSet.beforeFirst();
+            while (usersDbSet.next()) {
+                usernameMap.put(usersDbSet.getString("id"), usersDbSet.getString("picture_name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return usernameMap;
     }
 
     public HashMap<String, String> readUsernames() {
@@ -190,10 +211,9 @@ public class DBPicturesManager {
     }
 
     private ResultSet readAllPicturesFromUsersDB(String username) throws SQLException {
-        ResultSet pictures = statement.executeQuery("SELECT * FROM MedicalPictures.Picture WHERE username='"+username+"'");
+        ResultSet pictures = statement.executeQuery("SELECT * FROM MedicalPictures.Picture WHERE username='" + username + "'");
         return pictures;
     }
-
 
     public HashMap<String, String> getUserValues(String username) throws SQLException {
         ResultSet set = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE username='" + username + "'");
@@ -246,5 +266,67 @@ public class DBPicturesManager {
             }
         }
         return userValues;
+    }
+
+    public void updatePictures(ObservableList data, HashMap<String, String> fileData) throws SQLException, PictureDataException {
+        verifyPictureData(data);
+        deletePictures(data);
+        savePictures(data, fileData);
+
+    }
+
+    private void savePictures(ObservableList data, HashMap<String, String> fileData) throws SQLException {
+        for (Object pictureObject : data) {
+            PictureEntry picture = (PictureEntry) pictureObject;
+            if (picture.justAdded) {//we dont want to add pictures which already are in DB
+                if (picture.getSelected()) {//we want to add only pictures that are selected
+                    String pictureName = picture.getPictureName();
+                    String capture_datetime = picture.getCapture_datetime();
+                    String doctor_username = commonManager.getDoctorUsername(picture.getDoctor_name());
+                    String pictureData = fileData.get(pictureName);
+                    String username = picture.getUsername();
+                    String technician_username = picture.getTechnician_username();
+                    String body_part = picture.getBody_part();
+                    String picture_type = picture.getPicture_type();
+                    String description = picture.getDescription();
+                    queryRunner.update(connection, "INSERT INTO MedicalPictures.Picture VALUES(UUID(),?,?,LOAD_FILE(?),?,?,?,?,?,?)",
+                            pictureName,
+                            capture_datetime,
+                            pictureData,
+                            username,
+                            technician_username,
+                            doctor_username,
+                            body_part,
+                            picture_type,
+                            description);
+                }
+            }
+        }
+    }
+
+    private void deletePictures(ObservableList data) throws SQLException {
+        for (Object pictureObject : data) {
+            PictureEntry picture = (PictureEntry) pictureObject;
+            if (!picture.getSelected()) {//we dont want to add pictures which already are in DB
+                if (!picture.justAdded) {//if just added we will make with them nothing, cause they are not in DB
+                    String username = picture.getUsername();
+                    queryRunner.update(connection, "DELETE FROM MedicalPictures.Picture WHERE username=?", username);
+                }
+            }
+        }
+    }
+
+    private void verifyPictureData(ObservableList data) throws PictureDataException {
+        for (Object object : data) {
+            PictureEntry picture = (PictureEntry) object;
+            if (picture.getSelected()) {
+                String doctor_name = picture.getDoctor_name();
+                String body_part = picture.getBody_part();
+                String picture_type = picture.getPicture_type();
+                if (doctor_name.equals("NEW") || body_part.equals("NEW") || picture_type.equals("NEW")) {
+                    throw new PictureDataException(ResourceBundleMaster.TRANSLATOR.getTranslation("pictureDataIncorrect"));
+                }
+            }
+        }
     }
 }

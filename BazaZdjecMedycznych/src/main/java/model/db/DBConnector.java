@@ -54,8 +54,8 @@ public class DBConnector {
      */
     private String databaseName = "MedicalPictures";
 
-    private String restrictedUsername = "restrictedUser";
-    private String restrictedPassword = "restrictedReadOnly";
+    private String restrictedUsername = "root";
+    private String restrictedPassword = "root";
 
     private String patientUsername = "patientsAccount";
     private String patientPassword = "patientsPassword";
@@ -204,7 +204,7 @@ public class DBConnector {
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(body_part varchar(100) primary key)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(picture_type varchar(100) primary key)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id integer primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username), foreign key (doctor_username) references MedicalPictures.Doctor(username))");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Picture(id varchar(32) primary key,picture_name varchar(100), capture_datetime datetime, picture_data BLOB, username varchar(100), technician_username varchar(100),"
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Picture(id varchar(36) primary key,picture_name varchar(100), capture_datetime datetime, picture_data MEDIUMBLOB, username varchar(100), technician_username varchar(100),"
                 + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100),picture_description varchar(200), foreign key (username) references MedicalPictures.UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (technician_username)"
                 + "         references MedicalPictures.Technician(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (doctor_username) references MedicalPictures.Doctor(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (body_part) references MedicalPictures.BodyPart(body_part) ON DELETE CASCADE ON UPDATE CASCADE,"
                 + "         foreign key (picture_type) references MedicalPictures.PictureType(picture_type) ON DELETE CASCADE ON UPDATE CASCADE)");

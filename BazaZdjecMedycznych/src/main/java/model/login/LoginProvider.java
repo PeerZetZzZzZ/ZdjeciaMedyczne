@@ -50,6 +50,7 @@ public class LoginProvider {
                         failsCounter++;
                         return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                     }
+//                    DBConnector.master.createDatabaseSchema();
                     return "Successful";
                 } else {
 

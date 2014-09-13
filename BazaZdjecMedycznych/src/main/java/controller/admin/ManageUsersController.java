@@ -184,11 +184,9 @@ public class ManageUsersController extends Window {
                         if (!empty) {
                             super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
                         }
-//                        System.out.println(empty);
                     }
 
                 };
-//                cell.setAlignment(Pos.CENTER);
                 return cell;
             }
         });

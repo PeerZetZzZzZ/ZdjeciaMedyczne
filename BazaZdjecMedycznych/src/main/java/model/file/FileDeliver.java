@@ -2,7 +2,6 @@ package model.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import model.ResourceBundleMaster;
 import model.exception.FileTooBigException;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -20,7 +18,7 @@ import org.apache.commons.io.FilenameUtils;
 public class FileDeliver {
 
     List<File> fileList = new ArrayList<File>();
-    HashMap<String, byte[]> fileMap = new HashMap<String, byte[]>();
+    HashMap<String, String> fileMap = new HashMap<String, String>();
     List<String> extensionList;
 
     public FileDeliver(List<File> file) throws FileNotFoundException, FileTooBigException, IOException {
@@ -35,11 +33,8 @@ public class FileDeliver {
                 long fileLength = file.length();
                 if (fileLength > (1024 * 1024 * 10)) {
                     throw new FileTooBigException(ResourceBundleMaster.TRANSLATOR.getTranslation("fileTooBig"));
-                }
-                int length = (int) fileLength;
-                byte[] fileArray = new byte[length];
-                fileArray = FileUtils.readFileToByteArray(file);
-                fileMap.put(file.getName(), fileArray);
+                }//we dont have to read file as byte array
+                fileMap.put(file.getName(), file.getAbsolutePath());
             }
         }
     }
@@ -55,7 +50,7 @@ public class FileDeliver {
 
     }
 
-    public HashMap<String, byte[]> getFilesData() {
+    public HashMap<String, String> getFilesData() {
         return fileMap;
     }
 }
