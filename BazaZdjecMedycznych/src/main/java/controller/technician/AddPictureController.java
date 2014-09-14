@@ -6,7 +6,6 @@
 package controller.technician;
 
 import controller.Window;
-import controller.admin.AddUserController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,9 +20,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -120,7 +117,7 @@ public class AddPictureController extends Window {
                 getFiles(listOfFiles);
             } catch (SQLException ex) {
                 Logger.getLogger(AddPictureController.class.getName()).log(Level.SEVERE, null, ex);
-                
+
             }
         });
         buttonMarkAll.setOnAction(event -> {
@@ -154,8 +151,8 @@ public class AddPictureController extends Window {
     }
 
     private void fillPicturesTable() throws SQLException {
-        pictureManager.updateResultSet();//reading all users
         data.clear();
+        linkTableColumns();
         dataTemporary.stream().forEach((picture) -> {
             data.add(picture);
         });
@@ -170,18 +167,16 @@ public class AddPictureController extends Window {
         Set<String> idsOfRow = ids.keySet();
         for (String id : idsOfRow) { //from 1 because we use id in table from 1
             String picture_name = picture_names.get(id);
-            System.out.println("Picture name "  +picture_name);
             String capture_time = capture_times.get(id);
             String username = usernames.get(id);
             String technician_username = technician_usernames.get(id);
             String doctor_username = doctor_names.get(id);
             String body_part = body_parts.get(id);
             String picture_type = picture_types.get(id);
-            String description="";
+            String description = "";
             String technicianUsername = Common.COMMON.getLoggedUser();
             String doctorUsername = "";
-            data.add(new PictureEntry(id, picture_name, capture_time, username, technician_username, doctor_username, body_part, picture_type, description,technicianUsername
-                    ,doctorUsername, true, false));
+            data.add(new PictureEntry(id, picture_name, capture_time, username, technician_username, doctor_username, body_part, picture_type, description, technicianUsername, doctorUsername, true, false));
         }   //description above is empty value "" because we dont need to read it now and use it in table
         tableViewPictures.setItems(data);
         tableViewPictures.setEditable(true);
@@ -198,7 +193,7 @@ public class AddPictureController extends Window {
             @Override
             public TableCell<PictureEntry, String> call(TableColumn<PictureEntry, String> param) {
                 ComboBoxTableCell cell = new ComboBoxTableCell(doctorsList) {
-                    
+
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
@@ -285,18 +280,18 @@ public class AddPictureController extends Window {
         String capture_datetime = ftm.print(DateTime.now());
         String technician_name = commonManager.getTechnician(Common.COMMON.getLoggedUser());
         for (String pictureName : keys) {
-            String id="";//the new values must be edited before inserting to db
+            String id = "";//the new values must be edited before inserting to db
             String username = Common.COMMON.getUsernameOfPictures();
             String doctor_name = "NEW";
             String body_part = "NEW";
-            String picture_type="NEW";
-            String description="";
-            String technician_username=Common.COMMON.getLoggedUser();
+            String picture_type = "NEW";
+            String description = "";
+            String technician_username = Common.COMMON.getLoggedUser();
             String doctor_username = "NEW";
             boolean selected = true;//by default we want add all these to db
             boolean justAdded = true;//it means that we just added them, without flag we would not insert to DB again
-            PictureEntry picture = new PictureEntry(id,pictureName,capture_datetime,username,technician_name,
-                    doctor_name,body_part,picture_type,description,technician_username,doctor_username,selected,justAdded);
+            PictureEntry picture = new PictureEntry(id, pictureName, capture_datetime, username, technician_name,
+                    doctor_name, body_part, picture_type, description, technician_username, doctor_username, selected, justAdded);
             dataTemporary.add(picture);
         }
         fillPicturesTable();

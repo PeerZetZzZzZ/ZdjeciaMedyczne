@@ -14,18 +14,28 @@ public class Common {
     }
     private String loggedUser = "";
     private String usernameOfPictures = "";
+    private String manageUsersStartController = "";
 
     public void setLoggedUser(String user) {
         this.loggedUser = user;
     }
 
+    public void setManageUsersStartController(String controller) {
+        this.manageUsersStartController=controller;
+    }
+
+    public String getManangeUsersStartController(){
+        return this.manageUsersStartController;
+    }
     public String getLoggedUser() {
         return loggedUser;
     }
-    public void setUsernameOfPictures(String user){
-        this.usernameOfPictures=user;
+
+    public void setUsernameOfPictures(String user) {
+        this.usernameOfPictures = user;
     }
-    public String getUsernameOfPictures(){
+
+    public String getUsernameOfPictures() {
         return usernameOfPictures;
     }
 }

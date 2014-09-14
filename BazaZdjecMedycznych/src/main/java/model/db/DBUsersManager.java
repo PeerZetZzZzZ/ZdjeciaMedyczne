@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.enums.UserType;
 import model.exception.RegexException;
 import model.regex.RegexPatternChecker;
 import org.apache.commons.dbutils.QueryRunner;
@@ -41,9 +42,14 @@ public class DBUsersManager {
      * Patient,Doctor,Admin,Technician tables
      */
     private int userInsertIndex = 1;
+    private UserType user = null;//for this user account we will get all data
 
     public DBUsersManager() {
         updateResultSet();
+    }
+
+    public void setUserType(UserType user) {
+        this.user = user;
     }
 
     public int checkLinesAmountInTable(String tableName) {
@@ -81,7 +87,7 @@ public class DBUsersManager {
      * @throws SQLException1
      */
     private void createLoginUser(String username, String password, String type) throws RegexException, SQLException {
-        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,?,?)", username, password, type);
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.UsersDB VALUES(?,MD5(?),?)", username, password, type);
 
     }
 
@@ -123,10 +129,12 @@ public class DBUsersManager {
             usernameMap.clear();
         }
         try {
+            updateResultSet();
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
                 usernameMap.put(usersDbSet.getString("username"), usersDbSet.getString("username"));
             }
+            usersDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,7 +151,12 @@ public class DBUsersManager {
     }
 
     private ResultSet readAllUsersFromUsersDB() throws SQLException {
-        ResultSet users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB");
+        ResultSet users;
+        if (user != null) {
+            users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE account_type='" + user.toString() + "'");
+        } else {
+            users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB");
+        }
         return users;
     }
 
@@ -152,10 +165,12 @@ public class DBUsersManager {
             passwordMap.clear();
         }
         try {
+            updateResultSet();
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
                 passwordMap.put(usersDbSet.getString("username"), usersDbSet.getString("password"));
             }
+            usersDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,10 +182,12 @@ public class DBUsersManager {
             accountTypeMap.clear();
         }
         try {
+            updateResultSet();
             usersDbSet.beforeFirst();
             while (usersDbSet.next()) {
                 accountTypeMap.put(usersDbSet.getString("username"), usersDbSet.getString("account_type"));
             }
+            usersDbSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,6 +205,7 @@ public class DBUsersManager {
         ResultSet lastId = statement.executeQuery("SELECT COUNT(*) AS AMOUNT FROM MedicalPictures." + table);
         lastId.first();
         int amountOfRows = lastId.getInt("AMOUNT");
+        lastId.close();
         return amountOfRows + 1;
     }
 
@@ -241,6 +259,7 @@ public class DBUsersManager {
                     break;
             }
         }
+        set.close();
         return userValues;
     }
 
@@ -249,20 +268,20 @@ public class DBUsersManager {
         String accountType = existingUser.get("account_type");
         switch (accountType) {
             case "ADMIN":
-                queryRunner.update(connection,"DELETE FROM MedicalPictures.Admin WHERE username=?", username);
+                queryRunner.update(connection, "DELETE FROM MedicalPictures.Admin WHERE username=?", username);
                 break;
             case "TECHNICIAN":
-                queryRunner.update(connection,"DELETE FROM MedicalPictures.Technician WHERE username=?", username);
+                queryRunner.update(connection, "DELETE FROM MedicalPictures.Technician WHERE username=?", username);
                 break;
             case "PATIENT":
-                queryRunner.update(connection,"DELETE FROM MedicalPictures.Patient WHERE username=?", username);
+                queryRunner.update(connection, "DELETE FROM MedicalPictures.Patient WHERE username=?", username);
                 break;
             case "DOCTOR":
-                queryRunner.update(connection,"DELETE FROM MedicalPictures.Doctor WHERE username=?", username);
+                queryRunner.update(connection, "DELETE FROM MedicalPictures.Doctor WHERE username=?", username);
                 break;
-                
+
         }
-        queryRunner.update(connection,"UPDATE MedicalPictures.UsersDB SET account_type=? WHERE username=?",usertype, username);
+        queryRunner.update(connection, "UPDATE MedicalPictures.UsersDB SET account_type=? WHERE username=?", usertype, username);
         patternChecker.verifyUser(username);
         patternChecker.verifySingleWord(name);
         patternChecker.verifySingleWord(surname);

@@ -14,18 +14,19 @@
             <Button fx:id="deleteUserButton" mnemonicParsing="false" text="%deleteUsers" />
             <Button fx:id="markAllButton" mnemonicParsing="false" text="%markAll" />
             <Button fx:id="unmarkAllButton" mnemonicParsing="false" text="%unmarkAll" />
+            <Button fx:id="buttonRefresh" mnemonicParsing="false" text="%refreshView" />
          </children>
       </HBox>
    </top>
    <center>
       <TableView fx:id="usersTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="usernameTableColumn" prefWidth="110.0" text="%username" />
-            <TableColumn fx:id="passwordTableColumn" prefWidth="101.0" text="%password" />
-            <TableColumn fx:id="accountTypeTableColumn" prefWidth="120.0" text="%accountType" />
-            <TableColumn fx:id="buttonTableColumn" minWidth="160.0" prefWidth="160.0" resizable="false" />
-            <TableColumn fx:id="checkboxTableColumn" prefWidth="115.0" />
-            <TableColumn fx:id="tableColumnManagePictures" prefWidth="75.0" text="Column X" />
+          <TableColumn fx:id="usernameTableColumn" prefWidth="143.0" text="%username" />
+            <TableColumn fx:id="passwordTableColumn" prefWidth="108.0" text="%password" />
+            <TableColumn fx:id="accountTypeTableColumn" prefWidth="132.0" text="%accountType" />
+            <TableColumn fx:id="buttonTableColumn" minWidth="108.0" prefWidth="145.0" resizable="false" />
+            <TableColumn fx:id="tableColumnManagePictures" prefWidth="170.0" />
+            <TableColumn fx:id="checkboxTableColumn" prefWidth="59.0" />
         </columns>
       </TableView>
    </center>

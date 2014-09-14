@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,6 +32,7 @@ import javafx.util.Callback;
 import model.Common;
 import model.ResourceBundleMaster;
 import model.db.DBUsersManager;
+import model.enums.UserType;
 import model.tableentries.UserEntry;
 
 /**
@@ -69,23 +69,27 @@ public class ManageUsersController extends Window {
     private Button deleteUserButton;
     @FXML
     private Button unmarkAllButton;
- 
+    @FXML
+    private Button buttonRefresh;
     private DBUsersManager usersMaster = new DBUsersManager();
     ObservableList data = FXCollections.observableArrayList();
+    boolean flag = true;
 
     @Override
-
     public void initialize(URL url, ResourceBundle rb) {
         rb = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
-
+        if(Common.COMMON.getManangeUsersStartController().equals("MainWindowTechnicianController")){
+            usersMaster.setUserType(UserType.PATIENT);//we want to print only PATIENT users for this controller
+            passwordTableColumn.setVisible(false);
+        }
         initButtons();
         linkTableColumns();//after it we will can paste UserEntry to the table
         fillUsersTable();
     }
 
     private void fillUsersTable() {
-        usersMaster.updateResultSet();//reading all users
-        data.clear();
+        data.removeAll(data);
+        linkTableColumns();
         HashMap<String, String> usernames = usersMaster.readUsernames();
         HashMap<String, String> passwords = usersMaster.readPasswords();
         HashMap<String, String> accountTypes = usersMaster.readAccountTypes();
@@ -95,9 +99,14 @@ public class ManageUsersController extends Window {
             String password = passwords.get(user);
             String accountType = accountTypes.get(user);
             data.add(new UserEntry(username, password, accountType, false));
+            System.out.println(data.size());
+
         }
-        usersTableView.setItems(data);
-        usersTableView.setEditable(true);
+        if (flag) {
+            usersTableView.setItems(data);
+            usersTableView.setEditable(true);
+            flag = false;
+        }
     }
 
     private void linkTableColumns() {
@@ -113,22 +122,19 @@ public class ManageUsersController extends Window {
 
                     @Override
                     protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
                         final Button button = new Button(ResourceBundleMaster.TRANSLATOR.getTranslation("edit"));
-
                         {
                             if (!empty) {
-                                button.setMinWidth(160);
-                                button.setVisible(true);
-                                setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
-                                button.setOnAction(event -> {
-                                    AddUserController controller = (AddUserController) showWindow("admin/AddUser.fxml");
-                                    controller.fillValuesWithUser(item);
-                                    controller.getStage().setOnCloseRequest(close ->{
-                                        fillUsersTable();
+                                if (item != null) {
+                                    super.updateItem(item, empty);
+                                    button.setMinWidth(160);
+                                    button.setVisible(true);
+                                    setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
+                                    button.setOnAction(event -> {
+                                        AddUserController controller = (AddUserController) showWindow("admin/AddUser.fxml");
+                                        controller.fillValuesWithUser(item);
                                     });
-
-                                });
+                                }
                             }
                         }
 
@@ -153,7 +159,7 @@ public class ManageUsersController extends Window {
                         final Button button = new Button(ResourceBundleMaster.TRANSLATOR.getTranslation("managePictures"));
 
                         {
-                            if (!empty) {
+                            if (!empty && !item.equals("")) {
                                 button.setMinWidth(160);
                                 button.setVisible(true);
                                 setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
@@ -233,6 +239,9 @@ public class ManageUsersController extends Window {
                     Logger.getLogger(ManageUsersController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        });
+        buttonRefresh.setOnAction(event -> {
+            fillUsersTable();
         });
     }
 
