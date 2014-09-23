@@ -12,6 +12,8 @@
          <children>
             <Button fx:id="manageUsersButton" mnemonicParsing="false" text="%manageUsers" />
             <Button fx:id="managePicturesButton" mnemonicParsing="false" text="%managePictures" />
+            <Button fx:id="buttonManageBodyParts" mnemonicParsing="false" text="%manageBodyParts" />
+            <Button fx:id="buttonManagePictureTypes" mnemonicParsing="false" text="%managePictureTypes" />
             <Button fx:id="logoutButton" mnemonicParsing="false" text="%logout" />
             <Label fx:id="loggedAsLabel" prefHeight="27.0" prefWidth="193.0" text="%loggedAs" />
             <Label fx:id="infoLabel" />

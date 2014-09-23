@@ -41,6 +41,10 @@ public class MainWindowAdminController extends Window {
     private Button logoutButton;
     @FXML
     private Button managePicturesButton;
+    @FXML
+    private Button buttonManageBodyParts;
+    @FXML
+    private Button buttonManagePictureTypes;
 
     /**
      * Initializes the controller class.
@@ -65,9 +69,16 @@ public class MainWindowAdminController extends Window {
         logoutButton.setOnAction((event) -> {
             logoutAndClose();
         });
-        managePicturesButton.setOnAction(event->{
+        managePicturesButton.setOnAction(event -> {
             showManagePicturesWindow();
         });
+        buttonManageBodyParts.setOnAction(event -> {
+            showManageBodyPartsWindow();
+        });
+        buttonManagePictureTypes.setOnAction(event -> {
+            showManagePictureTypesWindow();
+        });
+
     }
 
     private void showManageUserWindow() {
@@ -76,12 +87,27 @@ public class MainWindowAdminController extends Window {
             this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
         }
     }
-     private void showManagePicturesWindow() {
+
+    private void showManagePicturesWindow() {
         Parent manageUsersRoot = StageMaster.master.getRoot("admin/ManagePictures.fxml");
         if (manageUsersRoot != null) {
             this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
         }
     }
+
+    private void showManageBodyPartsWindow() {
+        Parent manageUsersRoot = StageMaster.master.getRoot("admin/AddBodyPart.fxml");
+        if (manageUsersRoot != null) {
+            this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
+        }
+    }
+    private void showManagePictureTypesWindow() {
+        Parent manageUsersRoot = StageMaster.master.getRoot("admin/AddPictureType.fxml");
+        if (manageUsersRoot != null) {
+            this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
+        }
+    }
+
     public BorderPane getBorderPane() {
         return mainWindowAdminBorderPane;
     }
@@ -107,4 +133,5 @@ public class MainWindowAdminController extends Window {
             infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("connectionError"));
         }
     }
+
 }

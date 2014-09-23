@@ -30,24 +30,24 @@ import model.ResourceBundleMaster;
 import model.db.DBManagerCommon;
 import model.exception.RegexException;
 import model.regex.RegexPatternChecker;
-import model.tableentries.BodyPartEntry;
+import model.tableentries.PictureTypeEntry;
 
 /**
  * FXML Controller class
  *
  * @author peer
  */
-public class AddBodyPartController extends Window {
+public class AddPictureTypeController extends Window {
 
     /**
      * Initializes the controller class.
      */
     @FXML
-    Button buttonAddBodyPart;
+    Button buttonAddPictureType;
     @FXML
-    TextField textFieldBodyPart;
+    TextField textFieldPictureType;
     @FXML
-    Button buttonDeleteBodyPart;
+    Button buttonDeletePictureType;
     @FXML
     Button buttonMarkAll;
     @FXML
@@ -55,13 +55,14 @@ public class AddBodyPartController extends Window {
     @FXML
     Button buttonRefresh;
     @FXML
-    TableColumn tableColumnBodyPart;
+    TableColumn tableColumnPictureType;
     @FXML
-    TableView tableViewBodyPart;
+    TableView tableViewPictureType;
     @FXML
     TableColumn tableColumnCheckbox;
     @FXML
     Label labelInfo;
+
     RegexPatternChecker checker = new RegexPatternChecker();
     private DBManagerCommon managerCommon = new DBManagerCommon();
     ObservableList data = FXCollections.observableArrayList();
@@ -82,23 +83,23 @@ public class AddBodyPartController extends Window {
     private void fillBodyPartsTable() throws SQLException {
         data.removeAll(data);
         linkTableColumns();
-        for (String bodyPart : managerCommon.getBodyParts()) {
-            data.add(new BodyPartEntry(bodyPart, false));
+        for (String pictureType : managerCommon.getPictureTypes()) {
+            data.add(new PictureTypeEntry(pictureType, false));
         }
         if (flag) {
-            tableViewBodyPart.setItems(data);
-            tableViewBodyPart.setEditable(true);
+            tableViewPictureType.setItems(data);
+            tableViewPictureType.setEditable(true);
             flag = false;
         }
     }
 
     private void linkTableColumns() {
-        tableColumnBodyPart.setCellValueFactory(new PropertyValueFactory<BodyPartEntry, String>("bodyPart"));
-        tableColumnCheckbox.setCellValueFactory(new PropertyValueFactory<BodyPartEntry, Boolean>("selected"));
-        tableColumnCheckbox.setCellFactory(new Callback<TableColumn<BodyPartEntry, Boolean>, TableCell<BodyPartEntry, Boolean>>() {
+        tableColumnPictureType.setCellValueFactory(new PropertyValueFactory<PictureTypeEntry, String>("pictureType"));
+        tableColumnCheckbox.setCellValueFactory(new PropertyValueFactory<PictureTypeEntry, Boolean>("selected"));
+        tableColumnCheckbox.setCellFactory(new Callback<TableColumn<PictureTypeEntry, Boolean>, TableCell<PictureTypeEntry, Boolean>>() {
 
             @Override
-            public TableCell<BodyPartEntry, Boolean> call(TableColumn<BodyPartEntry, Boolean> param) {
+            public TableCell<PictureTypeEntry, Boolean> call(TableColumn<PictureTypeEntry, Boolean> param) {
                 CheckBoxTableCell cell = new CheckBoxTableCell() {
 
                     @Override
@@ -115,14 +116,14 @@ public class AddBodyPartController extends Window {
     }
 
     private void initButtons() {
-        buttonAddBodyPart.setOnAction((event) -> {
+        buttonAddPictureType.setOnAction((event) -> {
             try {
-                String bodyPart = this.textFieldBodyPart.getText();
-                checker.verifySingleWord(bodyPart);
-                managerCommon.addBodyPart(bodyPart);
-                data.add(new BodyPartEntry(bodyPart, false));
-                this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("bodyPartAdded"));
-                
+                String pictureType = this.textFieldPictureType.getText();
+                checker.verifySingleWord(pictureType);
+                managerCommon.addPictureType(pictureType);
+                data.add(new PictureTypeEntry(pictureType, false));
+                this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("pictureTypeAdded"));
+
             } catch (RegexException ex) {
                 Logger.getLogger(AddBodyPartController.class.getName()).log(Level.SEVERE, null, ex);
                 this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("illegalSingleWord"));
@@ -134,35 +135,35 @@ public class AddBodyPartController extends Window {
         );
         buttonMarkAll.setOnAction(event -> {
             if (!data.isEmpty()) {
-                for (Object body : data) {
-                    BodyPartEntry bodyEntry = (BodyPartEntry) body;
-                    bodyEntry.selected.setValue(Boolean.TRUE);
+                for (Object picture : data) {
+                    PictureTypeEntry picturePartEntry = (PictureTypeEntry) picture;
+                    picturePartEntry.selected.setValue(Boolean.TRUE);
                 }
             }
         });
         buttonUnmarkAll.setOnAction(event -> {
             if (!data.isEmpty()) {
-                for (Object body : data) {
-                    BodyPartEntry bodyEntry = (BodyPartEntry) body;
-                    bodyEntry.selected.setValue(Boolean.FALSE);
+                for (Object picture : data) {
+                    PictureTypeEntry pictureEntry = (PictureTypeEntry) picture;
+                    pictureEntry.selected.setValue(Boolean.FALSE);
                 }
             }
         });
-        buttonDeleteBodyPart.setOnAction(event -> {
+        buttonDeletePictureType.setOnAction(event -> {
             if (!data.isEmpty()) {
-                List<String> bodyPartsToDelete = new ArrayList<String>();
-                for (Object bodyPart : data) {
-                    BodyPartEntry bodyPar = (BodyPartEntry) bodyPart;
-                    if (bodyPar.getSelected()) {
-                        bodyPartsToDelete.add(bodyPar.getBodyPart());//if they have checkbox = true we will delete them
+                List<String> pictureTypesToDelete = new ArrayList<String>();
+                for (Object pictureType : data) {
+                    PictureTypeEntry pictureTyp = (PictureTypeEntry) pictureType;
+                    if (pictureTyp.getSelected()) {
+                        pictureTypesToDelete.add(pictureTyp.getPictureType());//if they have checkbox = true we will delete them
                     }
 
                 }
                 try {
-                    if (!bodyPartsToDelete.isEmpty()) {
-                        managerCommon.deleteBodyParts(bodyPartsToDelete);
+                    if (!pictureTypesToDelete.isEmpty()) {
+                        managerCommon.deletePictureType(pictureTypesToDelete);
                         fillBodyPartsTable();
-                        this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("bodyPartDeleted"));
+                        this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("pictureTypeDeleted"));
                     }
 
                 } catch (SQLException ex) {
@@ -180,12 +181,12 @@ public class AddBodyPartController extends Window {
     }
 
     protected void closeWindow() {
-        Stage stage = (Stage) this.buttonDeleteBodyPart.getScene().getWindow();
+        Stage stage = (Stage) this.buttonDeletePictureType.getScene().getWindow();
         stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
     }
 
     public void setWindowTitle(String title) {
-        Stage stage = (Stage) this.buttonDeleteBodyPart.getScene().getWindow();
+        Stage stage = (Stage) this.buttonDeletePictureType.getScene().getWindow();
         stage.setTitle(title);
     }
 

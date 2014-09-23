@@ -1,12 +1,10 @@
 package model.db;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.commons.dbutils.QueryRunner;
 
 /**
  *
@@ -53,6 +51,16 @@ public class DBManagerCommon extends DBManager {
         return bodyPartsList;
     }
 
+    public void addBodyPart(String bodyPart) throws SQLException {
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.BodyPart VALUES(?)", bodyPart);
+    }
+
+    public void deleteBodyParts(List<String> bodyParts) throws SQLException {
+        for (String bodyPart : bodyParts) {
+            queryRunner.update(connection, "DELETE FROM MedicalPictures.BodyPart WHERE  body_part=?", bodyPart);
+        }
+    }
+
     public ObservableList<String> getPictureTypes() throws SQLException {
         ResultSet pictureTypes = statement.executeQuery("SELECT * FROM MedicalPictures.PictureType");
         ObservableList<String> pictureTypeList = FXCollections.observableArrayList();
@@ -60,6 +68,16 @@ public class DBManagerCommon extends DBManager {
             pictureTypeList.add(pictureTypes.getString("picture_type"));
         }
         return pictureTypeList;
+    }
+
+    public void addPictureType(String pictureType) throws SQLException {
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.PictureType VALUES(?)", pictureType);
+    }
+
+    public void deletePictureType(List<String> pictureTypes) throws SQLException {
+        for (String pictureType : pictureTypes) {
+            queryRunner.update(connection, "DELETE FROM MedicalPictures.PictureType WHERE  body_part=?", pictureType);
+        }
     }
 
     public String getDoctorUsername(String nameAndSurname) {
