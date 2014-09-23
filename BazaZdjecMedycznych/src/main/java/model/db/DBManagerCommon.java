@@ -76,7 +76,7 @@ public class DBManagerCommon extends DBManager {
 
     public void deletePictureType(List<String> pictureTypes) throws SQLException {
         for (String pictureType : pictureTypes) {
-            queryRunner.update(connection, "DELETE FROM MedicalPictures.PictureType WHERE  body_part=?", pictureType);
+            queryRunner.update(connection, "DELETE FROM MedicalPictures.PictureType WHERE  picture_type=?", pictureType);
         }
     }
 

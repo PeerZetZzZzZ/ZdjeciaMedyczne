@@ -5,10 +5,8 @@
  */
 package model.db;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,7 +14,6 @@ import java.util.logging.Logger;
 import model.enums.UserType;
 import model.exception.RegexException;
 import model.regex.RegexPatternChecker;
-import org.apache.commons.dbutils.QueryRunner;
 
 /**
  * Class is responsible for deliver methods for managing users
@@ -156,7 +153,7 @@ public class DBUsersManager extends DBManager {
                     users = statement.executeQuery("SELECT u.username as username, u.password as password"
                             + ", u.account_type as account_type,p.name as name, p.surname as surname"
                             + " FROM MedicalPictures.UsersDB u JOIN MedicalPictures.Patient p ON u.username=p.username "
-                            + "WHERE u.account_type='" + user.toString() +"'");
+                            + "WHERE u.account_type='" + user.toString() + "'");
                     break;
                 default:
                     users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE account_type='"
@@ -320,5 +317,42 @@ public class DBUsersManager extends DBManager {
         }
         patternChecker.verifySingleWord(gender);
         createPerson(username, name, surname, age, gender, specialization, usertype);
+    }
+
+    public UserType readSingleUserType(String username, String password) throws SQLException {
+        ResultSet user = statement.executeQuery("SELECT account_type FROM MedicalPictures.UsersDB WHERE username='" + username + "' AND "
+                + "password=MD5('" + password + "')");
+        while (user.next()) {
+            String type = user.getString("account_type");
+            switch (type) {
+                case "ADMIN":
+                    return UserType.ADMIN;
+                case "PATIENT":
+                    return UserType.PATIENT;
+                case "TECHNICIAN":
+                    return UserType.TECHNICIAN;
+                case "DOCTOR":
+                    return UserType.DOCTOR;
+            }
+        }
+        return null;
+    }
+
+    public UserType readSingleUserType(String username) throws SQLException {
+        ResultSet user = statement.executeQuery("SELECT account_type FROM MedicalPictures.UsersDB WHERE username='" + username + "'");
+        while (user.next()) {
+            String type = user.getString("account_type");
+            switch (type) {
+                case "ADMIN":
+                    return UserType.ADMIN;
+                case "PATIENT":
+                    return UserType.PATIENT;
+                case "TECHNICIAN":
+                    return UserType.TECHNICIAN;
+                case "DOCTOR":
+                    return UserType.DOCTOR;
+            }
+        }
+        return null;
     }
 }

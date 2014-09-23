@@ -54,20 +54,20 @@ public class DBConnector {
      */
     private String databaseName = "MedicalPictures";
 
-    private String restrictedUsername = "root";
-    private String restrictedPassword = "root";
+    private String restrictedUsername = "restrictedUser";
+    private String restrictedPassword = "restrictedReadOnly";
 
-    private String patientUsername = "patientsAccount";
+    private String patientUsername = "pAccount";
     private String patientPassword = "patientsPassword";
 
-    private String technicianUsername = "technicianAccount";
+    private String technicianUsername = "tAccount";
     private String technicianPassword = "technicianPassword";
 
-    private String doctorUsername = "doctorAccount";
+    private String doctorUsername = "dAccount";
     private String doctorPassword = "doctorPassword";
 
-    private String adminUsername = "root";
-    private String adminPassword = "root";
+    private String adminUsername = "aAccount";
+    private String adminPassword = "adminPassword";
 
     private DBConnector() {
     }
@@ -95,6 +95,10 @@ public class DBConnector {
 
     public boolean createDatabaseTechnicianConnection() {
         return connectToTheDB(driverName, dbUrl, serverName, port, databaseName, technicianUsername, technicianPassword);
+    }
+
+    public boolean createDatabaseRootConnection(String password) {
+        return connectToTheDB(driverName, dbUrl, serverName, port, databaseName, "root", password);
     }
 
     /**
@@ -151,12 +155,14 @@ public class DBConnector {
             switch (usertype) {
                 case PATIENT:
                     statement.execute("CREATE USER '" + username + "'@'localhost' IDENTIFIED BY '" + password + "'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.BodyParts TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Diagnosis TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Picture TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.BodyPart TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Diagnosis TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Picture TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Technician TO '" + username + "'@'localhost'");
                     break;
                 case ADMIN:
                     statement.execute("CREATE USER '" + username + "'@'localhost' IDENTIFIED BY '" + password + "'");
@@ -164,22 +170,26 @@ public class DBConnector {
                     break;
                 case DOCTOR:
                     statement.execute("CREATE USER '" + username + "'@'localhost' IDENTIFIED BY '" + password + "'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.BodyParts TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT,UPDATE,DELETE,ALTER  ON MedicalPictures.Diagnosis TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "@'localhost'");
-                    statement.execute("GRANT GRANT SELECT,UPDATE,ALTER  ON MedicalPictures.Picture TO '" + username + "@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.BodyPart TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT,UPDATE,DELETE,ALTER,INSERT  ON MedicalPictures.Diagnosis TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT,UPDATE,ALTER  ON MedicalPictures.Picture TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Technician TO '" + username + "'@'localhost'");
+
                     break;
                 case TECHNICIAN:
                     statement.execute("CREATE USER '" + username + "'@'localhost' IDENTIFIED BY '" + password + "'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.BodyParts TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.Technician TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT,UPDATE,DELETE,ALTER ON MedicalPictures.Picture TO '" + username + "@'localhost'");
-                    statement.execute("GRANT SELECT,UPDATE,DELETE,ALTER ON MedicalPictures.PictureCapture TO '" + username + "@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Patient TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.BodyPart TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Doctor TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.Technician TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.PictureType TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT,UPDATE,DELETE,ALTER,INSERT ON MedicalPictures.Picture TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT FILE ON *.* TO '" + username + "'@'localhost'");
+                    statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO '" + username + "'@'localhost'");
                     break;
             }
         } catch (SQLException ex) {
@@ -197,26 +207,62 @@ public class DBConnector {
      */
     public void createDatabaseSchema() throws SQLException {
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(username varchar(100) primary key,password varchar(100),account_type varchar(15))");
+
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Patient(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Admin(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Doctor(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer,specialization varchar(50), foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Technician(username varchar(100), name varchar(100), surname varchar(100),sex varchar(6), age integer, foreign key (username) references UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(body_part varchar(100) primary key)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(picture_type varchar(100) primary key)");
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id varchar(36) primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username), foreign key (doctor_username) references MedicalPictures.Doctor(username))");
+
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id varchar(36) primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username))");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Picture(id varchar(36) primary key,picture_name varchar(100), capture_datetime datetime, picture_data LONGBLOB, username varchar(100), technician_username varchar(100),"
-                + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100),picture_description varchar(200), foreign key (username) references MedicalPictures.UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (technician_username)"
-                + "         references MedicalPictures.Technician(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (doctor_username) references MedicalPictures.Doctor(username) ON DELETE CASCADE ON UPDATE CASCADE, foreign key (body_part) references MedicalPictures.BodyPart(body_part) ON DELETE CASCADE ON UPDATE CASCADE,"
-                + "         foreign key (picture_type) references MedicalPictures.PictureType(picture_type) ON DELETE CASCADE ON UPDATE CASCADE)");
-        statement.execute("CREATE USER 'restrictedUser'@'localhost' IDENTIFIED by 'restrictedReadOnly'");
-        statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO 'restrictedUser'@'localhost'");
+                + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100),picture_description varchar(200), foreign key (username) references MedicalPictures.UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
+//        statement.execute("CREATE USER 'restrictedUser'@'localhost' IDENTIFIED by 'restrictedReadOnly'");
+//        statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO 'restrictedUser'@'localhost'");
         createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.ADMIN);
-        createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.DOCTOR);
-        createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.TECHNICIAN);
-        createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.PATIENT);
+        createUserInDatabaseWithTheGivenPermissions(doctorUsername, doctorPassword, UserType.DOCTOR);
+        createUserInDatabaseWithTheGivenPermissions(technicianUsername, technicianPassword, UserType.TECHNICIAN);
+        createUserInDatabaseWithTheGivenPermissions(patientUsername, patientPassword, UserType.PATIENT);
     }
-    
-    public void logout() throws SQLException{
+
+    public void logout() throws SQLException {
         this.con.close();
+    }
+
+    public UserType createSpecifiedDatabaseConnection(String username, String password) throws SQLException {
+        return connectToApplication(username, password);
+    }
+
+    public UserType connectToApplication(String username, String password) throws SQLException {
+        DBUsersManager managerUsers = new DBUsersManager();
+        UserType user = managerUsers.readSingleUserType(username, password);
+        disconnectFromServer();
+        if (user != null) {
+            switch (user) {
+                case ADMIN:
+                    boolean result = createDatabaseAdminConnection();
+                    if (result) {
+                        return user;
+                    }
+                    break;
+                case DOCTOR:
+                    if (createDatabaseDoctorConnection()) {
+                        return user;
+                    }
+                case TECHNICIAN:
+                    if (createDatabaseTechnicianConnection()) {
+                        return user;
+                    }
+                case PATIENT:
+                    if (createDatabasePatientConnection()) {
+                        return user;
+                    }
+            }
+        } else {
+            return null;
+        }
+        return null;
     }
 }

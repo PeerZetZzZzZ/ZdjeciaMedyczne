@@ -6,15 +6,17 @@
 package controller.doctor;
 
 import controller.Window;
-import controller.admin.AddUserController;
+import controller.admin.MainWindowAdminController;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Common;
 import model.ResourceBundleMaster;
+import model.db.DBConnector;
 import model.db.DBUsersManager;
 import model.enums.UserType;
 import model.tableentries.UserEntry;
@@ -41,7 +44,7 @@ public class MainWindowDoctorController extends Window {
      * Initializes the controller class.
      */
     @FXML
-    Button buttonClose;
+    Button buttonLogout;
     @FXML
     Label labelInfo;
     @FXML
@@ -52,6 +55,8 @@ public class MainWindowDoctorController extends Window {
     TableColumn tableColumnShowDiagnosis;
     @FXML
     TableView tableView;
+    @FXML
+    Label labelLoggedAs;
     private DBUsersManager usersMaster = new DBUsersManager();
     ObservableList data = FXCollections.observableArrayList();
     boolean flag = true;
@@ -60,6 +65,7 @@ public class MainWindowDoctorController extends Window {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         usersMaster.setUserType(UserType.PATIENT);
+        labelLoggedAs.setText(labelLoggedAs.getText() + " " + Common.COMMON.getLoggedUser());
         linkTableColumns();
         fillUsersTable();
         initButtons();
@@ -154,9 +160,20 @@ public class MainWindowDoctorController extends Window {
     }
 
     private void initButtons() {
-        this.buttonClose.setOnAction(event -> {
-            Stage stage = (Stage) buttonClose.getScene().getWindow();
-            stage.close();
+        this.buttonLogout.setOnAction(event -> {
+            logoutAndClose();
         });
+    }
+
+    public void logoutAndClose() {
+        try {
+            DBConnector.master.logout();
+            showWindow("LoginWindow.fxml");
+            Stage stage = (Stage) this.labelInfo.getScene().getWindow();
+            stage.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowAdminController.class.getName()).log(Level.SEVERE, null, ex);
+            labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("connectionError"));
+        }
     }
 }

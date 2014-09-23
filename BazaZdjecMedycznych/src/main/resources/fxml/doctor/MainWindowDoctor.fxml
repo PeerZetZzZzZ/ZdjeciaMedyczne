@@ -6,21 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="controller.doctor.MainWindowDoctorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.doctor.MainWindowDoctorController">
    <center>
       <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="tableColumnPatient" prefWidth="75.0" text="%patient" />
-          <TableColumn fx:id="tableColumnShowPictures" prefWidth="75.0" text="%showPictures" />
-            <TableColumn fx:id="tableColumnShowDiagnosis" prefWidth="75.0" text="%showDiagnosis" />
+          <TableColumn fx:id="tableColumnPatient" prefWidth="197.0" text="%patient" />
+          <TableColumn fx:id="tableColumnShowPictures" prefWidth="172.0" text="%showPictures" />
+            <TableColumn fx:id="tableColumnShowDiagnosis" prefWidth="169.0" text="%showDiagnosis" />
         </columns>
       </TableView>
    </center>
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="buttonClose" mnemonicParsing="false" text="%close" />
+            <Button fx:id="buttonLogout" mnemonicParsing="false" text="%logout" />
+            <Label fx:id="labelLoggedAs" text="%loggedAs" />
             <Label fx:id="labelInfo" />
          </children>
       </HBox>

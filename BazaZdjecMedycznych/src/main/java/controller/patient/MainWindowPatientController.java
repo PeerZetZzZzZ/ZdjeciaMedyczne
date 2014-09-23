@@ -5,6 +5,8 @@
  */
 package controller.patient;
 
+import controller.Window;
+import controller.admin.MainWindowAdminController;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Common;
 import model.ResourceBundleMaster;
+import model.db.DBConnector;
 import model.db.DBPatientManager;
 import model.file.FileDeliver;
 
@@ -38,7 +41,7 @@ import model.file.FileDeliver;
  *
  * @author PeerZet
  */
-public class MainWindowPatientController implements Initializable {
+public class MainWindowPatientController extends Window {
 
     /**
      * Initializes the controller class.
@@ -73,14 +76,17 @@ public class MainWindowPatientController implements Initializable {
     Button buttonSavePicture;
     @FXML
     TextArea textAreaDiagnosis;
+    @FXML
+    Label labelLoggedAs;
     Stage savePictureStage = new Stage();
     FileChooser fileChooser = new FileChooser();
-    List<byte[]> pictureList = new ArrayList<>();
+    HashMap<String, byte[]> pictureList = new HashMap<>();
     HashMap<String, HashMap<String, String>> picturesDescriptionMap = new HashMap<>();
     DBPatientManager patientManager = new DBPatientManager();
     String username = Common.COMMON.getLoggedUser();
     int pictureIndex = 0;
     FileDeliver fileDeliver = new FileDeliver();
+    String pictureName = "";
     HashMap<Integer, HashMap<String, String>> diagnosisMap = new HashMap<>();
 
     @Override
@@ -92,6 +98,8 @@ public class MainWindowPatientController implements Initializable {
             readAllPicturesDescription();
             readAllDiagnosis();
             initSliders();
+            labelLoggedAs.setText(labelLoggedAs.getText() + " " + Common.COMMON.getLoggedUser());
+
         } catch (SQLException | IOException ex) {
             this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
             Logger.getLogger(MainWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,8 +108,7 @@ public class MainWindowPatientController implements Initializable {
 
     private void initButtons() {
         buttonClose.setOnAction(event -> {
-            Stage stage = (Stage) this.buttonClose.getScene().getWindow();
-            stage.close();
+            logoutAndClose();
         });
         buttonSavePicture.setOnAction(event -> {
             try {
@@ -120,9 +127,12 @@ public class MainWindowPatientController implements Initializable {
         this.labelAge.setText(userInfo.get("age"));
     }
 
-    private void showPicture(int index) throws IOException {
-        Image image = new Image(new ByteArrayInputStream(pictureList.get(index)));
-        this.imageViewPicture.setImage(image);
+    private void showPicture() throws IOException {
+        if (!pictureName.isEmpty()) {
+            Image image = new Image(new ByteArrayInputStream(pictureList.get(pictureName)));
+            this.imageViewPicture.setImage(image);
+        }
+
     }
 
     private void showPictureDescription(int index) throws SQLException {
@@ -140,6 +150,7 @@ public class MainWindowPatientController implements Initializable {
         String capture_datetime = singlePicture.get("capture_datetime");
         String picture_description = singlePicture.get("picture_description");
         String body_part = singlePicture.get("body_part");
+        pictureName = singlePicture.get("picture_name");
         this.labelDoctorName.setText(doctor_name);
         this.labelTechnicianName.setText(techician_name);
         this.labelPictureDate.setText(capture_datetime);
@@ -168,7 +179,7 @@ public class MainWindowPatientController implements Initializable {
                 int index = new_val.intValue();
                 try {
                     showPictureDescription(index);
-                    showPicture(index);
+                    showPicture();
                     pictureIndex = index;
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
@@ -179,8 +190,8 @@ public class MainWindowPatientController implements Initializable {
             }
         });
         if (pictureList.size() > 0) {
-            showPicture(0);
             showPictureDescription(0);
+            showPicture();
         }
         if (!diagnosisMap.isEmpty()) {
             showDiagnosis(0);
@@ -205,7 +216,7 @@ public class MainWindowPatientController implements Initializable {
             }
             i++;
         }
-        byte[] pictureData = pictureList.get(pictureIndex);
+        byte[] pictureData = pictureList.get(pictureName);
         if (fileMap != null) {
             fileChooser.setInitialFileName(fileMap.get("picture_name"));
             File path = fileChooser.showSaveDialog(savePictureStage);
@@ -231,4 +242,15 @@ public class MainWindowPatientController implements Initializable {
         }
     }
 
+    public void logoutAndClose() {
+        try {
+            DBConnector.master.logout();
+            showWindow("LoginWindow.fxml");
+            Stage stage = (Stage) this.labelInfo.getScene().getWindow();
+            stage.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowAdminController.class.getName()).log(Level.SEVERE, null, ex);
+            labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("connectionError"));
+        }
+    }
 }

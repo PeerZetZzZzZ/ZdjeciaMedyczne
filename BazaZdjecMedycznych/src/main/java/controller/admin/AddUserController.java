@@ -129,9 +129,9 @@ public class AddUserController extends Window {
                     infoLabel.setText("User " + usernameTextField.getText() + " added!");
                 } else {
                     usersMaster.editUser(usernameTextField.getText(), nameTextField.getText(), surnameTextField.getText(), ageTextField.getText(), genderCombobox.getValue().toString(),
-                             specializationTextField.getText(),
+                            specializationTextField.getText(),
                             accountTypeCombobox.getValue().toString());
-                    infoLabel.setText("User " + usernameTextField.getText() + " added!");
+                    infoLabel.setText("User " + usernameTextField.getText() + " edited!");
                 }
             } else {
                 infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("provideValues"));
@@ -184,7 +184,8 @@ public class AddUserController extends Window {
         Stage stage = (Stage) this.closeButton.getScene().getWindow();
         stage.setTitle(title);
     }
-    public Stage getStage(){
+
+    public Stage getStage() {
         return (Stage) this.closeButton.getScene().getWindow();
     }
 }

@@ -11,7 +11,6 @@
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="manageUsersButton" mnemonicParsing="false" text="%manageUsers" />
-            <Button fx:id="managePicturesButton" mnemonicParsing="false" text="%managePictures" />
             <Button fx:id="buttonManageBodyParts" mnemonicParsing="false" text="%manageBodyParts" />
             <Button fx:id="buttonManagePictureTypes" mnemonicParsing="false" text="%managePictureTypes" />
             <Button fx:id="logoutButton" mnemonicParsing="false" text="%logout" />

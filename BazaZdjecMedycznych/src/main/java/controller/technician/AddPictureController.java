@@ -35,11 +35,12 @@ import model.Common;
 import model.ResourceBundleMaster;
 import model.db.DBManagerCommon;
 import model.db.DBPicturesManager;
+import model.db.DBUsersManager;
+import model.enums.UserType;
 import model.exception.FileTooBigException;
 import model.exception.PictureDataException;
 import model.file.FileDeliver;
 import model.tableentries.PictureEntry;
-import model.tableentries.UserEntry;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -80,6 +81,7 @@ public class AddPictureController extends Window {
     @FXML
     private Label labelInfo;
     private DBPicturesManager pictureManager = new DBPicturesManager();
+    private DBUsersManager managerUsers = new DBUsersManager();
     private DBManagerCommon commonManager = new DBManagerCommon();
     ObservableList data = FXCollections.observableArrayList();
 
@@ -104,6 +106,7 @@ public class AddPictureController extends Window {
             bodyPartList = commonManager.getBodyParts();//we read all the doctors
             pictureTypeList = commonManager.getPictureTypes();//we read all the doctors
             fillPicturesTable();
+            checkIfAdmin();
             fileChooserStage.setTitle(ResourceBundleMaster.TRANSLATOR.getTranslation("selectPictures"));
         } catch (SQLException ex) {
             Logger.getLogger(AddPictureController.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,16 +126,16 @@ public class AddPictureController extends Window {
         buttonMarkAll.setOnAction(event -> {
             if (!data.isEmpty()) {
                 for (Object user : data) {
-                    UserEntry userEntry = (UserEntry) user;
-                    userEntry.selected.setValue(Boolean.TRUE);
+                    PictureEntry pictureEntry = (PictureEntry) user;
+                    pictureEntry.selected.setValue(Boolean.TRUE);
                 }
             }
         });
         buttonUnmarkAll.setOnAction(event -> {
             if (!data.isEmpty()) {
                 for (Object user : data) {
-                    UserEntry userEntry = (UserEntry) user;
-                    userEntry.selected.setValue(Boolean.FALSE);
+                    PictureEntry pictureEntry = (PictureEntry) user;
+                    pictureEntry.selected.setValue(Boolean.FALSE);
                 }
             }
         });
@@ -295,5 +298,11 @@ public class AddPictureController extends Window {
             dataTemporary.add(picture);
         }
         fillPicturesTable();
+    }
+
+    private void checkIfAdmin() throws SQLException {
+        if(managerUsers.readSingleUserType(Common.COMMON.getLoggedUser()).equals(UserType.ADMIN)){
+            this.buttonAddPicture.setVisible(false);
+        }
     }
 }

@@ -1,6 +1,9 @@
-CREATE DATABASE MedicalPictures;
+CREATE DATABASE IF NOT EXISTS MedicalPictures;
+CREATE USER 'restrictedUser'@'localhost' IDENTIFIED by 'restrictedReadOnly';
+GRANT SELECT ON MedicalPictures.UsersDB TO 'restrictedUser'@'localhost'
+
 GRANT CREATE,SELECT,INSERT,UPDATE,DELETE,ALTER,INDEX,REFERENCES,EXECUTE ON MedicalPictures.* TO 'adminAccount'@'localhost' WITH GRANT OPTION;
 CREATE TABLE IF NOT EXISTS MedicalPictures.UsersDB(username varchar(100) primary key,password varchar(100),account_type varchar(15));
-INSERT INTO MedicalPictures.UsersDB VALUES (1,'admin',md5('admin'),'ADMIN');
+INSERT INTO MedicalPictures.UsersDB VALUES ('admin',md5('admin'),'ADMIN');
 
 Na dzień dobry trzeba się zalogować, z root'a, bo z admin nie da się tworzyć nowych użytkowników w sensie create user, tylko root może

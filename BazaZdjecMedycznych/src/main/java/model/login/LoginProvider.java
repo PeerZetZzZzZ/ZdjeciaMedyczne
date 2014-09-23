@@ -8,6 +8,8 @@ package model.login;
 import java.sql.SQLException;
 import model.ResourceBundleMaster;
 import model.db.DBConnector;
+import model.db.DBUsersManager;
+import model.enums.UserType;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
@@ -40,18 +42,25 @@ public class LoginProvider {
      * of not success
      */
     public String connectToDatabase(String username, String password) throws SQLException {
-        boolean result = connector.createDatabaseAdminConnection();//first we 
+        boolean result = connector.createDatabaseRestrictedConnection();//first we create restricted connection
+        UserType user = null;
         if (result) {
             if (username != null && password != null) {
                 if (failsCounter < 5) {
-                    //boolean result = connector.createDatabaseConnection(username, password);  to trzeba potem odkomentowac zeby dzialalo :D     
+                    user = connector.createSpecifiedDatabaseConnection(username, password);
                     dateTimeNow = DateTime.now().plusSeconds(30);
-                    if (!result) {
+                    if (!result || user == null) {
+                        if (username.equals("root")) {
+                            if (connector.createDatabaseRootConnection(password)) {
+                                connector.createDatabaseSchema();
+                                failsCounter = 0;
+                                return "Successful root";
+                            }
+                        }
                         failsCounter++;
                         return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                     }
-//                    DBConnector.master.createDatabaseSchema();
-                    return "Successful";
+                    return "Successful " + user.toString();
                 } else {
 
                     DateTime punishmentTime = DateTime.now();
@@ -71,7 +80,4 @@ public class LoginProvider {
 
     }
 
-    public boolean connectToApplication(String username, String password) {
-        return true;
-    }
 }

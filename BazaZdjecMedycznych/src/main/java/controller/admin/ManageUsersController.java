@@ -78,7 +78,10 @@ public class ManageUsersController extends Window {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         rb = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
-        if(Common.COMMON.getManangeUsersStartController().equals("MainWindowTechnicianController")){
+        if (Common.COMMON.getManangeUsersStartController().equals("MainWindowTechnicianController")) {
+            addUserButton.setVisible(false);
+            deleteUserButton.setVisible(false);
+            deleteUserButton.setVisible(false);
             usersMaster.setUserType(UserType.PATIENT);//we want to print only PATIENT users for this controller
             passwordTableColumn.setVisible(false);
         }
@@ -159,13 +162,19 @@ public class ManageUsersController extends Window {
 
                         {
                             if (!empty && !item.equals("")) {
-                                button.setMinWidth(160);
-                                button.setVisible(true);
-                                setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
-                                button.setOnAction(event -> {
-                                    Common.COMMON.setUsernameOfPictures(item);
-                                    AddPictureController controller = (AddPictureController) showWindow("technician/AddPicture.fxml");
-                                });
+                                try {
+                                    if (usersMaster.readSingleUserType(item)==UserType.PATIENT) {
+                                        button.setMinWidth(160);
+                                        button.setVisible(true);
+                                        setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
+                                        button.setOnAction(event -> {
+                                            Common.COMMON.setUsernameOfPictures(item);
+                                            AddPictureController controller = (AddPictureController) showWindow("technician/AddPicture.fxml");
+                                        });
+                                    }
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(ManageUsersController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
 

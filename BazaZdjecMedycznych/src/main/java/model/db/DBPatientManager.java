@@ -26,11 +26,11 @@ public class DBPatientManager extends DBManager {
         return userMap;
     }
 
-    public List<byte[]> getPicturesData(String username) throws SQLException {
-        ResultSet pictures = statement.executeQuery("SELECT picture_data FROM MedicalPictures.Picture WHERE username='" + username + "'");
-        List<byte[]> pictureList = new ArrayList<>();
+    public HashMap<String,byte[]> getPicturesData(String username) throws SQLException {
+        ResultSet pictures = statement.executeQuery("SELECT picture_name,picture_data FROM MedicalPictures.Picture WHERE username='" + username + "'");
+        HashMap<String,byte[]> pictureList = new HashMap<>();
         while (pictures.next()) {
-            pictureList.add(pictures.getBytes("picture_data"));
+            pictureList.put(pictures.getString("picture_name"),pictures.getBytes("picture_data"));
         }
         return pictureList;
     }

@@ -39,8 +39,7 @@ public class MainWindowAdminController extends Window {
     private Label infoLabel;
     @FXML
     private Button logoutButton;
-    @FXML
-    private Button managePicturesButton;
+
     @FXML
     private Button buttonManageBodyParts;
     @FXML
@@ -69,9 +68,6 @@ public class MainWindowAdminController extends Window {
         logoutButton.setOnAction((event) -> {
             logoutAndClose();
         });
-        managePicturesButton.setOnAction(event -> {
-            showManagePicturesWindow();
-        });
         buttonManageBodyParts.setOnAction(event -> {
             showManageBodyPartsWindow();
         });
@@ -88,19 +84,13 @@ public class MainWindowAdminController extends Window {
         }
     }
 
-    private void showManagePicturesWindow() {
-        Parent manageUsersRoot = StageMaster.master.getRoot("admin/ManagePictures.fxml");
-        if (manageUsersRoot != null) {
-            this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
-        }
-    }
-
     private void showManageBodyPartsWindow() {
         Parent manageUsersRoot = StageMaster.master.getRoot("admin/AddBodyPart.fxml");
         if (manageUsersRoot != null) {
             this.mainWindowAdminBorderPane.setCenter(manageUsersRoot);
         }
     }
+
     private void showManagePictureTypesWindow() {
         Parent manageUsersRoot = StageMaster.master.getRoot("admin/AddPictureType.fxml");
         if (manageUsersRoot != null) {

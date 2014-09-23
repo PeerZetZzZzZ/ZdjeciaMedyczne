@@ -12,8 +12,8 @@ import model.exception.RegexException;
  */
 public class RegexPatternChecker {
 
-    private final String usernamePattern = "[a-z0-9_]{1,20}";//only a-z and 0-9 and _ only 20 signs
-    private final String passwordPattern = "[\\w][^ '\"]{3,15}";// \\ because of java \w illegal character, 3-15 signs, no ' and " and space
+    private final String usernamePattern = "[a-z0-9_]{1,100}";//only a-z and 0-9 and _ only 20 signs
+    private final String passwordPattern = "[\\w][^ '\"]{3,100}";// \\ because of java \w illegal character, 3-15 signs, no ' and " and space
     private final String singleWordPattern = "[a-zA-Z]{1,40}";// only a-Z and 1-40 signs
     private final String singleNumberPattern = "[\\d]{1,10}";// only integer max 10 signs
     private final String singleDescriptionPattern = "[\\w][^'\"]{0,200}";//description has 200 signs max

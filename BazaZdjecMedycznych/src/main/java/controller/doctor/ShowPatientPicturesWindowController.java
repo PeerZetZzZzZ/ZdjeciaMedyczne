@@ -46,7 +46,7 @@ public class ShowPatientPicturesWindowController implements Initializable {
     Slider slider;
     @FXML
     Label labelInfo;
-    List<byte[]> pictureList = new ArrayList<>();
+    HashMap<String, byte[]> pictureList = new HashMap<>();
     DBPatientManager patientManager = new DBPatientManager();
     @FXML
     ImageView imageViewPicture;
@@ -58,6 +58,7 @@ public class ShowPatientPicturesWindowController implements Initializable {
     Button buttonSave;
     @FXML
     Label labelImageName;
+    String pictureName;
     HashMap<String, HashMap<String, String>> picturesDescriptionMap = new HashMap<>();
     int pictureIndex = 0;
     RegexPatternChecker checker = new RegexPatternChecker();
@@ -84,8 +85,8 @@ public class ShowPatientPicturesWindowController implements Initializable {
 
     private void initSliders() throws IOException, SQLException {
         if (!pictureList.isEmpty()) {
-            showPicture(0);
             showPictureDescription(0);
+            showPicture();
         }
         slider.setMax(pictureList.size() - 1);
         slider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -93,8 +94,8 @@ public class ShowPatientPicturesWindowController implements Initializable {
                     Number old_val, Number new_val) {
                 int index = new_val.intValue();
                 try {
-                    showPicture(index);
                     showPictureDescription(index);
+                    showPicture();
                     pictureIndex = index;
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,15 +108,18 @@ public class ShowPatientPicturesWindowController implements Initializable {
         });
     }
 
-    private void showPicture(int index) throws IOException {
-        Image image = new Image(new ByteArrayInputStream(pictureList.get(index)));
-        this.imageViewPicture.setImage(image);
+    private void showPicture() throws IOException {
+        if (!pictureName.isEmpty()) {
+            Image image = new Image(new ByteArrayInputStream(pictureList.get(pictureName)));
+            this.imageViewPicture.setImage(image);
+        }
     }
 
     private void showPictureDescription(int index) throws SQLException {
         int i = 0;
         HashMap<String, String> singlePicture = null;
         for (HashMap<String, String> pic : picturesDescriptionMap.values()) {
+            System.out.println(pic.get("picture_name"));
             if (i == index) {
                 singlePicture = pic;
                 break;
@@ -124,6 +128,7 @@ public class ShowPatientPicturesWindowController implements Initializable {
         }
         String picture_description = singlePicture.get("picture_description");
         String name = singlePicture.get("picture_name");
+        pictureName=name;
         this.textAreaPictureDescription.setText(picture_description);
         this.labelImageName.setText(name);
     }
@@ -152,6 +157,8 @@ public class ShowPatientPicturesWindowController implements Initializable {
                 try {
                     checker.verifySingleDescription(description);
                     patientManager.updatePictureDescription(description, singlePicture.get("id"));
+                    labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("pictureDescriptionSaved"));
+                    textAreaPictureDescription.clear();
                 } catch (RegexException ex) {
                     Logger.getLogger(ShowPatientPicturesWindowController.class.getName()).log(Level.SEVERE, null, ex);
                     labelInfo.setText(ex.getMessage());

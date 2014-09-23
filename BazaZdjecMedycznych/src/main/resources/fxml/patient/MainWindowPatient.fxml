@@ -12,9 +12,10 @@
    <bottom>
       <HBox prefHeight="96.0" prefWidth="571.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="buttonClose" mnemonicParsing="false" text="%close" />
-            <Label fx:id="labelInfo" />
+            <Button fx:id="buttonClose" mnemonicParsing="false" text="%logout" />
             <Button fx:id="buttonSavePicture" mnemonicParsing="false" text="%savePicture" />
+            <Label fx:id="labelLoggedAs" text="%loggedAs" />
+            <Label fx:id="labelInfo" />
          </children></HBox>
    </bottom>
    <left>
