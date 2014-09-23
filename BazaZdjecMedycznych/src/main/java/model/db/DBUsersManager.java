@@ -319,7 +319,9 @@ public class DBUsersManager extends DBManager {
         createPerson(username, name, surname, age, gender, specialization, usertype);
     }
 
-    public UserType readSingleUserType(String username, String password) throws SQLException {
+    public UserType readSingleUserType(String username, String password) throws SQLException, RegexException {
+        patternChecker.verifyUser(username);
+        patternChecker.verifyPassword(password);
         ResultSet user = statement.executeQuery("SELECT account_type FROM MedicalPictures.UsersDB WHERE username='" + username + "' AND "
                 + "password=MD5('" + password + "')");
         while (user.next()) {

@@ -40,20 +40,37 @@ public class DBPatientManager extends DBManager {
         if (doctor_username != null) {
             pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
                     + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
-                    + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND d.username='" + doctor_username + "' AND p.doctor_username=d.username AND"
-                    + " p.technician_username=t.username");
+                    + " FROM MedicalPictures.Picture p LEFT JOIN MedicalPictures.Doctor d ON d.username=p.doctor_username LEFT JOIN MedicalPictures.Technician t ON t.username=p.technician_username WHERE p.username='" + username + "' "
+                    + "AND d.username='" + doctor_username + "'");
+//            pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
+//                    + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
+//                    + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND d.username='" + doctor_username + "' AND p.doctor_username=d.username AND"
+//                    + " p.technician_username=t.username");
         } else {
             pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
                     + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
-                    + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND p.doctor_username=d.username AND"
-                    + " p.technician_username=t.username");
+                    + " FROM MedicalPictures.Picture p LEFT JOIN MedicalPictures.Doctor d ON d.username=p.doctor_username LEFT JOIN MedicalPictures.Technician t ON t.username=p.technician_username WHERE p.username='" + username + "'");
         }
         HashMap<String, HashMap<String, String>> picturesMap = new HashMap<>();
         HashMap<String, String> pictureDescriptionMap = new HashMap<>();
         while (pictureDescription.next()) {
             String id = pictureDescription.getString("id");
-            String technician = pictureDescription.getString("technician_name") + " " + pictureDescription.getString("technician_surname");
-            String doctor = pictureDescription.getString("doctor_name") + " " + pictureDescription.getString("doctor_surname");
+            String technicianName = pictureDescription.getString("technician_name");
+            String technicianSurname = pictureDescription.getString("technician_surname");
+            String technician;
+            if (technicianName != null && technicianSurname != null) {
+                technician = technicianName + " " + technicianSurname;
+            } else {
+                technician = "not present";
+            }
+            String doctorName = pictureDescription.getString("doctor_name");
+            String doctorSurname = pictureDescription.getString("doctor_surname");
+            String doctor;
+            if (doctorName != null && doctorSurname != null) {
+                doctor = doctorName + " " + doctorSurname;
+            } else {
+                doctor = "not present";
+            }
             String capture_datetime = pictureDescription.getString("capture_datetime");
             String body_part = pictureDescription.getString("body_part");
             String picture_descrpiton = pictureDescription.getString("picture_description");
@@ -76,17 +93,24 @@ public class DBPatientManager extends DBManager {
         ResultSet result;
         if (doctor_username != null) {
             result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
-                    + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "' AND "
+                    + " MedicalPictures.Diagnosis diagnosis LEFT JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "' AND "
                     + "diagnosis.doctor_username='" + doctor_username + "'");
         } else {
             result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
-                    + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "'");
+                    + " MedicalPictures.Diagnosis diagnosis LEFT JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "'");
         }
         HashMap<String, String> diagnosisMap = new HashMap<>();
         HashMap<Integer, HashMap<String, String>> diagnosisFull = new HashMap<>();
         int i = 0;
         while (result.next()) {
-            String doctor = result.getString("doctor_name") + " " + result.getString("doctor_surname");
+            String doctorName = result.getString("doctor_name");
+            String doctorSurname = result.getString("doctor_surname");
+            String doctor;
+            if (doctorName != null && doctorSurname != null) {
+                doctor = doctorName + " " + doctorSurname;
+            } else {
+                doctor = "not present";
+            }
             String description = result.getString("description");
             String id = result.getString("id");
             diagnosisMap.put("doctor", doctor);

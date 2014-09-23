@@ -10,6 +10,7 @@ import model.ResourceBundleMaster;
 import model.db.DBConnector;
 import model.db.DBUsersManager;
 import model.enums.UserType;
+import model.exception.RegexException;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
@@ -41,7 +42,7 @@ public class LoginProvider {
      * @return "successful" in case of success and punishment time left in case
      * of not success
      */
-    public String connectToDatabase(String username, String password) throws SQLException {
+    public String connectToDatabase(String username, String password) throws SQLException, RegexException {
         boolean result = connector.createDatabaseRestrictedConnection();//first we create restricted connection
         UserType user = null;
         if (result) {

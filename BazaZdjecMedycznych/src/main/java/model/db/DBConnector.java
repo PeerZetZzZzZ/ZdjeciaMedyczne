@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.enums.UserType;
+import model.exception.RegexException;
 import org.apache.commons.dbutils.QueryRunner;
 
 /**
@@ -229,11 +230,11 @@ public class DBConnector {
         this.con.close();
     }
 
-    public UserType createSpecifiedDatabaseConnection(String username, String password) throws SQLException {
+    public UserType createSpecifiedDatabaseConnection(String username, String password) throws SQLException, RegexException {
         return connectToApplication(username, password);
     }
 
-    public UserType connectToApplication(String username, String password) throws SQLException {
+    public UserType connectToApplication(String username, String password) throws SQLException, RegexException {
         DBUsersManager managerUsers = new DBUsersManager();
         UserType user = managerUsers.readSingleUserType(username, password);
         disconnectFromServer();

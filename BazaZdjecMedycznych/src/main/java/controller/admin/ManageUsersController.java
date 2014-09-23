@@ -74,12 +74,16 @@ public class ManageUsersController extends Window {
     private DBUsersManager usersMaster = new DBUsersManager();
     ObservableList data = FXCollections.observableArrayList();
     boolean flag = true;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         rb = ResourceBundleMaster.TRANSLATOR.getResourceBundle();
         if (Common.COMMON.getManangeUsersStartController().equals("MainWindowTechnicianController")) {
             addUserButton.setVisible(false);
+            markAllButton.setVisible(false);
+            unmarkAllButton.setVisible(false);
+            buttonTableColumn.setVisible(false);
+            checkboxTableColumn.setVisible(false);
             deleteUserButton.setVisible(false);
             deleteUserButton.setVisible(false);
             usersMaster.setUserType(UserType.PATIENT);//we want to print only PATIENT users for this controller
@@ -89,7 +93,7 @@ public class ManageUsersController extends Window {
         linkTableColumns();//after it we will can paste UserEntry to the table
         fillUsersTable();
     }
-
+    
     private void fillUsersTable() {
         data.removeAll(data);
         linkTableColumns();
@@ -102,7 +106,7 @@ public class ManageUsersController extends Window {
             String password = passwords.get(user);
             String accountType = accountTypes.get(user);
             data.add(new UserEntry(username, password, accountType, false));
-
+            
         }
         if (flag) {
             usersTableView.setItems(data);
@@ -110,18 +114,18 @@ public class ManageUsersController extends Window {
             flag = false;
         }
     }
-
+    
     private void linkTableColumns() {
         usernameTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("username"));
         passwordTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("password"));
         accountTypeTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("accountType"));
         buttonTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("username"));
         buttonTableColumn.setCellFactory(new Callback<TableColumn<UserEntry, String>, TableCell<UserEntry, String>>() {
-
+            
             @Override
             public TableCell<UserEntry, String> call(TableColumn<UserEntry, String> param) {
                 TableCell<UserEntry, String> cell = new TableCell<UserEntry, String>() {
-
+                    
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         final Button button = new Button(ResourceBundleMaster.TRANSLATOR.getTranslation("edit"));
@@ -139,31 +143,31 @@ public class ManageUsersController extends Window {
                                 }
                             }
                         }
-
+                        
                     }
-
+                    
                 };
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
-
+            
         });
         tableColumnManagePictures.setCellValueFactory(new PropertyValueFactory<UserEntry, String>("username"));
         tableColumnManagePictures.setCellFactory(new Callback<TableColumn<UserEntry, String>, TableCell<UserEntry, String>>() {
-
+            
             @Override
             public TableCell<UserEntry, String> call(TableColumn<UserEntry, String> param) {
                 TableCell<UserEntry, String> cell = new TableCell<UserEntry, String>() {
-
+                    
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         final Button button = new Button(ResourceBundleMaster.TRANSLATOR.getTranslation("managePictures"));
-
+                        
                         {
                             if (!empty && !item.equals("")) {
                                 try {
-                                    if (usersMaster.readSingleUserType(item)==UserType.PATIENT) {
+                                    if (usersMaster.readSingleUserType(item) == UserType.PATIENT) {
                                         button.setMinWidth(160);
                                         button.setVisible(true);
                                         setGraphic(button);//kurwa mać 1h w dupie bo tego nie było
@@ -177,35 +181,35 @@ public class ManageUsersController extends Window {
                                 }
                             }
                         }
-
+                        
                     }
-
+                    
                 };
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
-
+            
         });
         checkboxTableColumn.setCellValueFactory(new PropertyValueFactory<UserEntry, Boolean>("selected"));
         checkboxTableColumn.setCellFactory(new Callback<TableColumn<UserEntry, Boolean>, TableCell<UserEntry, Boolean>>() {
-
+            
             @Override
             public TableCell<UserEntry, Boolean> call(TableColumn<UserEntry, Boolean> param) {
                 CheckBoxTableCell cell = new CheckBoxTableCell() {
-
+                    
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         if (!empty) {
                             super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
                         }
                     }
-
+                    
                 };
                 return cell;
             }
         });
     }
-
+    
     private void initButtons() {
         addUserButton.setOnAction((event) -> {
             showWindow("admin/AddUser.fxml");
@@ -235,14 +239,14 @@ public class ManageUsersController extends Window {
                     if (userEntry.getSelected()) {
                         usersToDelete.add(userEntry.getUsername());//if they have checkbox = true we will delete them
                     }
-
+                    
                 }
                 try {
                     if (!usersToDelete.isEmpty()) {
                         usersMaster.deleteUsers(usersToDelete);
                         fillUsersTable();
                     }
-
+                    
                 } catch (SQLException ex) {
                     Logger.getLogger(ManageUsersController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -252,15 +256,15 @@ public class ManageUsersController extends Window {
             fillUsersTable();
         });
     }
-
+    
     protected void closeWindow() {
         Stage stage = (Stage) this.deleteUserButton.getScene().getWindow();
         stage.close();//tu jest nadal problem bo nie wiem skat tego stage wziac
     }
-
+    
     public void setWindowTitle(String title) {
         Stage stage = (Stage) this.deleteUserButton.getScene().getWindow();
         stage.setTitle(title);
     }
-
+    
 }

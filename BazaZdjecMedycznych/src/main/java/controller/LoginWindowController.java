@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Common;
 import model.ResourceBundleMaster;
+import model.exception.RegexException;
 import model.login.LoginProvider;
 
 /**
@@ -75,6 +76,11 @@ public class LoginWindowController extends Window {
             }
         } catch (SQLException ex) {
             Logger.getLogger(LoginWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            errorLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
+
+        } catch (RegexException ex) {
+            Logger.getLogger(LoginWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            errorLabel.setText(ex.getMessage());
         }
     }
 
