@@ -6,8 +6,6 @@
 package controller.doctor;
 
 import controller.Window;
-import controller.patient.MainWindowPatientController;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -17,7 +15,6 @@ import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -58,9 +55,9 @@ public class ShowPatientDiagnosisWindowController extends Window {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initButtons();
-        initSliders();
         try {
             readAllDiagnosis();
+            initSliders();
         } catch (SQLException ex) {
             Logger.getLogger(ShowPatientDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
             labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
@@ -76,7 +73,7 @@ public class ShowPatientDiagnosisWindowController extends Window {
         buttonDelete.setOnAction(event -> {
             try {
                 deleteDiagnosis(imageIndex);
-                readAllDiagnosis();
+                this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisDeleted"));
             } catch (SQLException ex) {
                 Logger.getLogger(ShowPatientDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
@@ -89,6 +86,7 @@ public class ShowPatientDiagnosisWindowController extends Window {
         buttonSaveDiagnosis.setOnAction(event -> {
             try {
                 updateDiagnosis(imageIndex);
+                labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisUpdated"));
             } catch (SQLException ex) {
                 Logger.getLogger(ShowPatientDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
@@ -110,6 +108,9 @@ public class ShowPatientDiagnosisWindowController extends Window {
             String id = diagnosis.get("id");
             patientManager.removeDiagnosis(id);
         }
+        readAllDiagnosis();
+        initSliders();
+
     }
 
     private void readAllDiagnosis() throws SQLException {
@@ -119,6 +120,11 @@ public class ShowPatientDiagnosisWindowController extends Window {
     private void initSliders() {
         if (!diagnosisMap.isEmpty()) {
             slider.setMax(diagnosisMap.size() - 1);
+            HashMap<String, String> first = diagnosisMap.get(0);
+            textAreaDiagnosis.setText(first.get("description"));
+        }
+        else{
+            textAreaDiagnosis.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("noDiagnosis"));
         }
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
