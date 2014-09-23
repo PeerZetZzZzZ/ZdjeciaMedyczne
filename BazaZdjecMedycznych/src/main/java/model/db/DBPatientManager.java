@@ -26,20 +26,28 @@ public class DBPatientManager extends DBManager {
         return userMap;
     }
 
-    public HashMap<String,byte[]> getPicturesData(String username) throws SQLException {
+    public HashMap<String, byte[]> getPicturesData(String username) throws SQLException {
         ResultSet pictures = statement.executeQuery("SELECT picture_name,picture_data FROM MedicalPictures.Picture WHERE username='" + username + "'");
-        HashMap<String,byte[]> pictureList = new HashMap<>();
+        HashMap<String, byte[]> pictureList = new HashMap<>();
         while (pictures.next()) {
-            pictureList.put(pictures.getString("picture_name"),pictures.getBytes("picture_data"));
+            pictureList.put(pictures.getString("picture_name"), pictures.getBytes("picture_data"));
         }
         return pictureList;
     }
 
-    public HashMap<String, HashMap<String, String>> getPicturesDescription(String username) throws SQLException {
-        ResultSet pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
-                + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
-                + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND p.doctor_username=d.username AND"
-                + " p.technician_username=t.username");
+    public HashMap<String, HashMap<String, String>> getPicturesDescription(String username, String doctor_username) throws SQLException {
+        ResultSet pictureDescription;
+        if (doctor_username != null) {
+            pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
+                    + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
+                    + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND d.username='" + doctor_username + "' AND p.doctor_username=d.username AND"
+                    + " p.technician_username=t.username");
+        } else {
+            pictureDescription = statement.executeQuery("SELECT p.id as id, p.picture_name as picture_name, p.capture_datetime AS capture_datetime, p.body_part as body_part,"
+                    + "p.picture_description as picture_description, d.name AS doctor_name ,d.surname as doctor_surname, t.name AS technician_name, t.surname AS technician_surname"
+                    + " FROM MedicalPictures.Picture p,MedicalPictures.Doctor d,MedicalPictures.Technician t WHERE p.username='" + username + "' AND p.doctor_username=d.username AND"
+                    + " p.technician_username=t.username");
+        }
         HashMap<String, HashMap<String, String>> picturesMap = new HashMap<>();
         HashMap<String, String> pictureDescriptionMap = new HashMap<>();
         while (pictureDescription.next()) {
@@ -64,9 +72,16 @@ public class DBPatientManager extends DBManager {
         return picturesMap;
     }
 
-    public HashMap<Integer, HashMap<String, String>> getAllDiagnosis(String username) throws SQLException {
-        ResultSet result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
-                + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "'");
+    public HashMap<Integer, HashMap<String, String>> getAllDiagnosis(String username, String doctor_username) throws SQLException {
+        ResultSet result;
+        if (doctor_username != null) {
+            result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
+                    + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "' AND "
+                    + "diagnosis.doctor_username='" + doctor_username + "'");
+        } else {
+            result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
+                    + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "'");
+        }
         HashMap<String, String> diagnosisMap = new HashMap<>();
         HashMap<Integer, HashMap<String, String>> diagnosisFull = new HashMap<>();
         int i = 0;

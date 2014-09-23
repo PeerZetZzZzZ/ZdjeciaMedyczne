@@ -50,6 +50,8 @@ public class ShowPatientDiagnosisWindowController extends Window {
     Label labelInfo;
     @FXML
     Slider slider;
+    @FXML
+    Button buttonRefresh;
     DBPatientManager patientManager = new DBPatientManager();
     RegexPatternChecker matcher = new RegexPatternChecker();
 
@@ -73,6 +75,14 @@ public class ShowPatientDiagnosisWindowController extends Window {
         buttonClose.setOnAction(event -> {
             Stage stage = (Stage) this.buttonAdd.getScene().getWindow();
             stage.close();
+        });
+        buttonRefresh.setOnAction(event -> {
+            try {
+                readAllDiagnosis();
+                initSliders();
+            } catch (SQLException ex) {
+                labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
+            }
         });
         buttonDelete.setOnAction(event -> {
             try {
@@ -119,7 +129,7 @@ public class ShowPatientDiagnosisWindowController extends Window {
     }
 
     private void readAllDiagnosis() throws SQLException {
-        diagnosisMap = patientManager.getAllDiagnosis(Common.COMMON.getUsernameOfPictures());
+        diagnosisMap = patientManager.getAllDiagnosis(Common.COMMON.getUsernameOfPictures(),Common.COMMON.getLoggedUser());
     }
 
     private void initSliders() {

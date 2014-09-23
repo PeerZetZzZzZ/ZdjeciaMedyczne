@@ -127,6 +127,7 @@ public class AddUserController extends Window {
                             ageTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), specializationTextField.getText(),
                             accountTypeCombobox.getValue().toString());
                     infoLabel.setText("User " + usernameTextField.getText() + " added!");
+                    clearAll();
                 } else {
                     usersMaster.editUser(usernameTextField.getText(), nameTextField.getText(), surnameTextField.getText(), ageTextField.getText(), genderCombobox.getValue().toString(),
                             specializationTextField.getText(),
@@ -137,11 +138,9 @@ public class AddUserController extends Window {
                 infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("provideValues"));
             }
         } catch (SQLException ex) {
-            this.infoLabel.setText(ex.getMessage());
-            Logger.getLogger(AddUserController.class.getName()).log(Level.SEVERE, null, ex);
+            this.infoLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalErrorOrDuplicatedKey"));
         } catch (RegexException ex) {
             this.infoLabel.setText(ex.getMessage());
-            Logger.getLogger(AddUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -187,5 +186,14 @@ public class AddUserController extends Window {
 
     public Stage getStage() {
         return (Stage) this.closeButton.getScene().getWindow();
+    }
+
+    private void clearAll() {
+        nameTextField.clear();
+        surnameTextField.clear();
+        ageTextField.clear();
+        usernameTextField.clear();
+        passwordTextField.clear();
+        specializationTextField.clear();
     }
 }

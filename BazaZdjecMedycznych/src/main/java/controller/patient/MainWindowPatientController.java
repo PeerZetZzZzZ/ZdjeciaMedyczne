@@ -163,7 +163,7 @@ public class MainWindowPatientController extends Window {
     }
 
     private void readAllPicturesDescription() throws SQLException {
-        picturesDescriptionMap = patientManager.getPicturesDescription(username);
+        picturesDescriptionMap = patientManager.getPicturesDescription(username, null);
     }
 
     private void initSliders() throws IOException, SQLException {
@@ -230,7 +230,7 @@ public class MainWindowPatientController extends Window {
     }
 
     private void readAllDiagnosis() throws SQLException {
-        diagnosisMap = patientManager.getAllDiagnosis(Common.COMMON.getLoggedUser());
+        diagnosisMap = patientManager.getAllDiagnosis(Common.COMMON.getLoggedUser(), null);
     }
 
     private void showDiagnosis(int index) {

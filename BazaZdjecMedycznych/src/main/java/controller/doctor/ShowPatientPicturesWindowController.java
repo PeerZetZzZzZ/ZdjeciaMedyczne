@@ -58,7 +58,7 @@ public class ShowPatientPicturesWindowController implements Initializable {
     Button buttonSave;
     @FXML
     Label labelImageName;
-    String pictureName;
+    String pictureName = "";
     HashMap<String, HashMap<String, String>> picturesDescriptionMap = new HashMap<>();
     int pictureIndex = 0;
     RegexPatternChecker checker = new RegexPatternChecker();
@@ -116,28 +116,34 @@ public class ShowPatientPicturesWindowController implements Initializable {
     }
 
     private void showPictureDescription(int index) throws SQLException {
-        int i = 0;
-        HashMap<String, String> singlePicture = null;
-        for (HashMap<String, String> pic : picturesDescriptionMap.values()) {
-            System.out.println(pic.get("picture_name"));
-            if (i == index) {
-                singlePicture = pic;
-                break;
+        if (!picturesDescriptionMap.isEmpty()) {
+            int i = 0;
+            HashMap<String, String> singlePicture = null;
+            for (HashMap<String, String> pic : picturesDescriptionMap.values()) {
+                if (i == index) {
+                    singlePicture = pic;
+                    break;
+                }
+                i++;
             }
-            i++;
+            String picture_description = singlePicture.get("picture_description");
+            String name = singlePicture.get("picture_name");
+            pictureName = name;
+            this.textAreaPictureDescription.setText(picture_description);
+            this.labelImageName.setText(name);
         }
-        String picture_description = singlePicture.get("picture_description");
-        String name = singlePicture.get("picture_name");
-        pictureName=name;
-        this.textAreaPictureDescription.setText(picture_description);
-        this.labelImageName.setText(name);
     }
 
     private void readAllPicturesDescription() throws SQLException {
-        picturesDescriptionMap = patientManager.getPicturesDescription(Common.COMMON.getUsernameOfPictures());
+        picturesDescriptionMap = patientManager.getPicturesDescription(Common.COMMON.getUsernameOfPictures(), Common.COMMON.getLoggedUser());
+
     }
 
     private void initButtons() {
+        if (picturesDescriptionMap.isEmpty()) {
+            Stage stage = (Stage) this.buttonClose.getScene().getWindow();
+            stage.close();
+        }
         this.buttonClose.setOnAction(event -> {
             Stage stage = (Stage) this.buttonClose.getScene().getWindow();
             stage.close();

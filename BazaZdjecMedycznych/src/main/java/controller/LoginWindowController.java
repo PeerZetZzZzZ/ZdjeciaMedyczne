@@ -71,7 +71,7 @@ public class LoginWindowController extends Window {
             }
             clearTextFields();
             if (flag) {
-                errorLabel.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage"));
+                errorLabel.setText(resultOfLoging);
             }
         } catch (SQLException ex) {
             Logger.getLogger(LoginWindowController.class.getName()).log(Level.SEVERE, null, ex);

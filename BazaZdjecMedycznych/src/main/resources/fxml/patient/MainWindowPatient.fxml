@@ -54,6 +54,7 @@
                <children>
                   <ImageView fx:id="imageViewPicture" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <Slider fx:id="sliderPicture" />
+                  <Label text="%pictureDescription" />
                   <TextArea fx:id="textAreaPictureDescription" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </VBox>

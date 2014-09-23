@@ -45,38 +45,25 @@ public class LoginProvider {
         boolean result = connector.createDatabaseRestrictedConnection();//first we create restricted connection
         UserType user = null;
         if (result) {
-            if (username != null && password != null) {
-                if (failsCounter < 5) {
-                    user = connector.createSpecifiedDatabaseConnection(username, password);
-                    dateTimeNow = DateTime.now().plusSeconds(30);
-                    if (!result || user == null) {
-                        if (username.equals("root")) {
-                            if (connector.createDatabaseRootConnection(password)) {
-                                connector.createDatabaseSchema();
-                                failsCounter = 0;
-                                return "Successful root";
-                            }
+            if (!username.equals("") && !password.equals("")) {
+                user = connector.createSpecifiedDatabaseConnection(username, password);
+                dateTimeNow = DateTime.now().plusSeconds(30);
+                if (!result || user == null) {
+                    if (username.equals("root")) {
+                        if (connector.createDatabaseRootConnection(password)) {
+                            connector.createDatabaseSchema();
+                            return "Successful root";
                         }
-                        failsCounter++;
-                        return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                     }
-                    return "Successful " + user.toString();
-                } else {
-
-                    DateTime punishmentTime = DateTime.now();
-                    Seconds secondsBetween = Seconds.secondsBetween(punishmentTime, dateTimeNow);
-                    if (secondsBetween.getSeconds() > 0) {
-                        failsCounter = 0;
-                    }
-                    //Return information about unsuccessful login and time punishment
-                    return ResourceBundleMaster.TRANSLATOR.getTranslation("waitPunishmentMessage")
-                            + String.valueOf(secondsBetween.getSeconds()) + ResourceBundleMaster.TRANSLATOR.getTranslation("seconds");
-
+                    return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
                 }
+                return "Successful " + user.toString();
+            } else {
+                return ResourceBundleMaster.TRANSLATOR.getTranslation("emptyUsernameOrPasswordMessage");
             }
-            return ResourceBundleMaster.TRANSLATOR.getTranslation("emptyUsernameOrPasswordMessage");
+        } else {
+            return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
         }
-        return ResourceBundleMaster.TRANSLATOR.getTranslation("unsuccessfulLoginMessage");
 
     }
 

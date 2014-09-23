@@ -14,6 +14,7 @@
             <Button fx:id="buttonSaveDiagnosis" mnemonicParsing="false" text="%saveDiagnosis" />
             <Button fx:id="buttonDelete" mnemonicParsing="false" text="%deleteDiagnosis" />
             <Button fx:id="buttonAdd" mnemonicParsing="false" text="%addDiagnosis" />
+            <Button fx:id="buttonRefresh" mnemonicParsing="false" text="%refreshView" />
             <Label fx:id="labelInfo" />
          </children>
       </HBox>
