@@ -62,9 +62,9 @@ public class LoginWindowController extends Window {
                 Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
                 Common.COMMON.setLoggedUser(this.usernameTextField.getText());
                 loginWindow.hide();
-//                showWindow("patient/MainWindowPatient.fxml");
+                showWindow("patient/MainWindowPatient.fxml");
 //                showWindow("admin/MainWindowAdmin.fxml");
-                showWindow("doctor/MainWindowDoctor.fxml");
+//                showWindow("doctor/MainWindowDoctor.fxml");
             }
             clearTextFields();
 

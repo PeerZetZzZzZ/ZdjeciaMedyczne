@@ -227,7 +227,7 @@ public class MainWindowPatientController implements Initializable {
             HashMap<String, String> diagnosis = diagnosisMap.get(index);
             String doctor = diagnosis.get("doctor");
             String description = diagnosis.get("description");
-            this.textAreaDiagnosis.setText(doctor + ": " + diagnosis);
+            this.textAreaDiagnosis.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("assessmentBy") + " " + doctor + ": " + description);
         }
     }
 

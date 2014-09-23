@@ -66,7 +66,7 @@ public class DBPatientManager extends DBManager {
 
     public HashMap<Integer, HashMap<String, String>> getAllDiagnosis(String username) throws SQLException {
         ResultSet result = statement.executeQuery("SELECT diagnosis.id as id, d.name as doctor_name, d.surname as doctor_surname, diagnosis.description as description FROM"
-                + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username");
+                + " MedicalPictures.Diagnosis diagnosis JOIN MedicalPictures.Doctor d ON d.username=diagnosis.doctor_username WHERE diagnosis.username='" + username + "'");
         HashMap<String, String> diagnosisMap = new HashMap<>();
         HashMap<Integer, HashMap<String, String>> diagnosisFull = new HashMap<>();
         int i = 0;

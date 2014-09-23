@@ -24,8 +24,8 @@
             <Label prefHeight="15.0" prefWidth="307.0" text="%username" GridPane.rowIndex="1" />
             <Label prefHeight="15.0" prefWidth="302.0" text="%password" GridPane.rowIndex="2" />
             <TextField fx:id="usernameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button fx:id="loginButton" mnemonicParsing="false" text="%login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <PasswordField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </center>

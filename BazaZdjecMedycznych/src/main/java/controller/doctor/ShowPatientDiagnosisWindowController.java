@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 import model.Common;
 import model.ResourceBundleMaster;
 import model.db.DBPatientManager;
+import model.exception.RegexException;
+import model.regex.RegexPatternChecker;
 
 /**
  * FXML Controller class
@@ -49,6 +51,8 @@ public class ShowPatientDiagnosisWindowController extends Window {
     @FXML
     Slider slider;
     DBPatientManager patientManager = new DBPatientManager();
+    RegexPatternChecker matcher = new RegexPatternChecker();
+
     HashMap<Integer, HashMap<String, String>> diagnosisMap = new HashMap<>();
     int imageIndex = 0;
 
@@ -73,7 +77,6 @@ public class ShowPatientDiagnosisWindowController extends Window {
         buttonDelete.setOnAction(event -> {
             try {
                 deleteDiagnosis(imageIndex);
-                this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisDeleted"));
             } catch (SQLException ex) {
                 Logger.getLogger(ShowPatientDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
@@ -86,8 +89,7 @@ public class ShowPatientDiagnosisWindowController extends Window {
         buttonSaveDiagnosis.setOnAction(event -> {
             try {
                 updateDiagnosis(imageIndex);
-                labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisUpdated"));
-            } catch (SQLException ex) {
+            } catch (SQLException | RegexException ex) {
                 Logger.getLogger(ShowPatientDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
             }
@@ -107,6 +109,9 @@ public class ShowPatientDiagnosisWindowController extends Window {
             HashMap<String, String> diagnosis = diagnosisMap.get(index);
             String id = diagnosis.get("id");
             patientManager.removeDiagnosis(id);
+            this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisDeleted"));
+        } else {
+            this.labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("noDiagnosisToDelete"));
         }
         readAllDiagnosis();
         initSliders();
@@ -122,8 +127,7 @@ public class ShowPatientDiagnosisWindowController extends Window {
             slider.setMax(diagnosisMap.size() - 1);
             HashMap<String, String> first = diagnosisMap.get(0);
             textAreaDiagnosis.setText(first.get("description"));
-        }
-        else{
+        } else {
             textAreaDiagnosis.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("noDiagnosis"));
         }
         slider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -137,12 +141,16 @@ public class ShowPatientDiagnosisWindowController extends Window {
         });
     }
 
-    private void updateDiagnosis(int imageIndex) throws SQLException {
+    private void updateDiagnosis(int imageIndex) throws SQLException, RegexException {
         if (!diagnosisMap.isEmpty()) {
             HashMap<String, String> diagnosis = diagnosisMap.get(imageIndex);
             String id = diagnosis.get("id");
             String description = textAreaDiagnosis.getText();
+            matcher.verifySingleDiagnosis(description);
             patientManager.updateDiagnosis(id, description);
+            labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisUpdated"));
+        } else {
+            labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("noDiagnosisToUpdate"));
         }
     }
 

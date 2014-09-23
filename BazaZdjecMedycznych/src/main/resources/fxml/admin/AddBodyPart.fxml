@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="manageUsersBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.admin.AddBodyPartController">
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="addUserButton" mnemonicParsing="false" text="%addBodyPart" />
+            <TextField fx:id="textFieldBodyPart" />
+            <Button fx:id="buttonDeleteBodyPart" mnemonicParsing="false" text="%deleteBodyPart" />
+            <Button fx:id="buttonMarkAll" mnemonicParsing="false" text="%markAll" />
+            <Button fx:id="buttonUnmarkAll" mnemonicParsing="false" text="%unmarkAll" />
+            <Button fx:id="buttonRefresh" mnemonicParsing="false" text="%refreshView" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TableView fx:id="tableViewBodyPart" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="tableColumnBodyPart" prefWidth="143.0" text="%bodyPart" />
+            <TableColumn fx:id="checkboxTableColumn" prefWidth="59.0" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>
