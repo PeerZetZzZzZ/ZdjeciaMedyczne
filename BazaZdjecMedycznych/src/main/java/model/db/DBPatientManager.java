@@ -95,7 +95,8 @@ public class DBPatientManager extends DBManager {
     public void updateDiagnosis(String id, String description) throws SQLException {
         queryRunner.update(connection, "UPDATE MedicalPictures.Diagnosis SET description=? WHERE id=?", description, id);
     }
-    public void insertDiagnosis(String diagnosis, String patientUsername, String doctorUsername) throws SQLException{
-        queryRunner.update("INSERT INTO MedicalPictures.Diagnosis VALUES(UUID(),?,?,?)",patientUsername,doctorUsername,diagnosis);
+
+    public void insertDiagnosis(String diagnosis, String patientUsername, String doctorUsername) throws SQLException {
+        queryRunner.update(connection, "INSERT INTO MedicalPictures.Diagnosis VALUES(UUID(),?,?,?)", patientUsername, doctorUsername, diagnosis);
     }
 }

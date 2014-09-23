@@ -55,9 +55,12 @@ public class AddDiagnosisWindowController implements Initializable {
         });
         buttonSave.setOnAction(event -> {
             try {
+                labelInfo.setText("");
                 matcher.verifySingleDiagnosis(this.textAreaDiagnosis.getText());
                 patientManager.insertDiagnosis(this.textAreaDiagnosis.getText(), Common.COMMON.getUsernameOfPictures(),
                         Common.COMMON.getLoggedUser());
+                labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("diagnosisSavedSuccessfully"));
+                this.textAreaDiagnosis.clear();
             } catch (RegexException | SQLException ex) {
                 Logger.getLogger(AddDiagnosisWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 labelInfo.setText(ResourceBundleMaster.TRANSLATOR.getTranslation("internalError"));
