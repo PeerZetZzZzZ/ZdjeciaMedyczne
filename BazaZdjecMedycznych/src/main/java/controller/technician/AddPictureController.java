@@ -301,7 +301,7 @@ public class AddPictureController extends Window {
     }
 
     private void checkIfAdmin() throws SQLException {
-        if(managerUsers.readSingleUserType(Common.COMMON.getLoggedUser()).equals(UserType.ADMIN)){
+        if (managerUsers.readSingleUserType(Common.COMMON.getLoggedUser()).equals(UserType.ADMIN)) {
             this.buttonAddPicture.setVisible(false);
         }
     }

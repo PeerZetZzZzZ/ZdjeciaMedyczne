@@ -94,6 +94,7 @@ public class MainWindowTechnicianController extends Window {
             DBConnector.master.logout();
             showWindow("LoginWindow.fxml");
             Stage stage = (Stage) this.loggedAsLabel.getScene().getWindow();
+            Common.COMMON.setManageUsersStartController("");
             stage.close();
         } catch (SQLException ex) {
             Logger.getLogger(MainWindowTechnicianController.class.getName()).log(Level.SEVERE, null, ex);

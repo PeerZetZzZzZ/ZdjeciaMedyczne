@@ -216,11 +216,9 @@ public class DBConnector {
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.BodyPart(body_part varchar(100) primary key)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.PictureType(picture_type varchar(100) primary key)");
 
-        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id varchar(36) primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username))");
+        statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Diagnosis(id varchar(36) primary key, username varchar(100), doctor_username varchar(100), description varchar(500), foreign key (username) references MedicalPictures.Patient(username) ON DELETE CASCADE ON UPDATE CASCADE)");
         statement.execute("CREATE TABLE IF NOT EXISTS MedicalPictures.Picture(id varchar(36) primary key,picture_name varchar(100), capture_datetime datetime, picture_data LONGBLOB, username varchar(100), technician_username varchar(100),"
-                + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100),picture_description varchar(200), foreign key (username) references MedicalPictures.UsersDB(username) ON DELETE CASCADE ON UPDATE CASCADE)");
-//        statement.execute("CREATE USER 'restrictedUser'@'localhost' IDENTIFIED by 'restrictedReadOnly'");
-//        statement.execute("GRANT SELECT ON MedicalPictures.UsersDB TO 'restrictedUser'@'localhost'");
+                + "         doctor_username varchar(100), body_part varchar(100), picture_type varchar(100),picture_description varchar(200), foreign key (username) references MedicalPictures.Patient(username) ON DELETE CASCADE ON UPDATE CASCADE)");
         createUserInDatabaseWithTheGivenPermissions(adminUsername, adminPassword, UserType.ADMIN);
         createUserInDatabaseWithTheGivenPermissions(doctorUsername, doctorPassword, UserType.DOCTOR);
         createUserInDatabaseWithTheGivenPermissions(technicianUsername, technicianPassword, UserType.TECHNICIAN);
