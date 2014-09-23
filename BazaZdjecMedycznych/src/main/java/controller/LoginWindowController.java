@@ -4,6 +4,7 @@ package controller;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -61,10 +62,12 @@ public class LoginWindowController extends Window {
                 Stage loginWindow = (Stage) this.loginWindowBorderPane.getScene().getWindow();
                 Common.COMMON.setLoggedUser(this.usernameTextField.getText());
                 loginWindow.hide();
-                showWindow("technician/MainWindowTechnician.fxml");
+//                showWindow("patient/MainWindowPatient.fxml");
+//                showWindow("admin/MainWindowAdmin.fxml");
+                showWindow("doctor/MainWindowDoctor.fxml");
             }
             clearTextFields();
-            
+
             errorLabel.setText(resultOfLoging);
         } catch (SQLException ex) {
             Logger.getLogger(LoginWindowController.class.getName()).log(Level.SEVERE, null, ex);

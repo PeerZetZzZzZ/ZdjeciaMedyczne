@@ -1,11 +1,8 @@
 package model.db;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -17,17 +14,13 @@ import model.exception.PictureDataException;
 import model.exception.RegexException;
 import model.regex.RegexPatternChecker;
 import model.tableentries.PictureEntry;
-import org.apache.commons.dbutils.QueryRunner;
 
 /**
  *
  * @author PeerZet
  */
-public class DBPicturesManager {
+public class DBPicturesManager extends DBManager {
 
-    private Connection connection = DBConnector.master.getConnection();
-    private Statement statement = DBConnector.master.getStatement();
-    private QueryRunner queryRunner = DBConnector.master.getQueryRunner();//for easy quries
     private HashMap<String, String> idsMap = new HashMap<String, String>();
     private HashMap<String, String> picture_namesMap = new HashMap<String, String>();
     private HashMap<String, String> capture_datetimedMap = new HashMap<String, String>();
@@ -208,13 +201,13 @@ public class DBPicturesManager {
         }
         updateResultSet();
         picturesDbSet.beforeFirst();
-            HashMap<String,String> idAndDoctorUsernames = new HashMap<>();
+        HashMap<String, String> idAndDoctorUsernames = new HashMap<>();
         while (picturesDbSet.next()) {
-            idAndDoctorUsernames.put(picturesDbSet.getString("id"),picturesDbSet.getString("doctor_username"));
+            idAndDoctorUsernames.put(picturesDbSet.getString("id"), picturesDbSet.getString("doctor_username"));
         }
         Set<String> keySet = idAndDoctorUsernames.keySet();
         for (String key : keySet) {
-        String doctor_username = idAndDoctorUsernames.get(key);//we get id of the picture
+            String doctor_username = idAndDoctorUsernames.get(key);//we get id of the picture
             ResultSet doctor = statement.executeQuery("SELECT DISTINCT(name), surname FROM MedicalPictures.Doctor JOIN MedicalPictures.Picture ON \n"
                     + "doctor_username ='" + doctor_username + "'");
             if (doctor.next()) {

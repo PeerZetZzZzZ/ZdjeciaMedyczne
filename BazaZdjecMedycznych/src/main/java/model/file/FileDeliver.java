@@ -1,7 +1,10 @@
 package model.file;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +30,10 @@ public class FileDeliver {
         getDataFromFiles(fileList);
     }
 
+    public FileDeliver() {
+        this.extensionList = new ArrayList<String>(Arrays.asList("jpg", "jpeg", "bmp"));
+    }
+
     private void getDataFromFiles(List<File> fileList) throws FileNotFoundException, FileTooBigException, IOException {
         for (File file : fileList) {
             if (verifyFileExtension(file.getAbsolutePath())) {
@@ -39,7 +46,7 @@ public class FileDeliver {
         }
     }
 
-    private boolean verifyFileExtension(String filePath) {
+    public boolean verifyFileExtension(String filePath) {
         String extension = FilenameUtils.getExtension(filePath);
         for (String allowedExtension : extensionList) {
             if (extension.equals(allowedExtension)) {
@@ -52,5 +59,11 @@ public class FileDeliver {
 
     public HashMap<String, String> getFilesData() {
         return fileMap;
+    }
+
+    public void saveFile(String filePath, byte[] data) throws FileNotFoundException, IOException {
+        FileOutputStream fileStream = new FileOutputStream(filePath);
+        fileStream.write(data);
+        fileStream.close();
     }
 }

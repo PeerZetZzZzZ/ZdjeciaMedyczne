@@ -15,7 +15,7 @@ public class Common {
     private String loggedUser = "";
     private String usernameOfPictures = "";
     private String manageUsersStartController = "";
-
+    
     public void setLoggedUser(String user) {
         this.loggedUser = user;
     }

@@ -99,7 +99,6 @@ public class ManageUsersController extends Window {
             String password = passwords.get(user);
             String accountType = accountTypes.get(user);
             data.add(new UserEntry(username, password, accountType, false));
-            System.out.println(data.size());
 
         }
         if (flag) {

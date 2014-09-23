@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="529.0" prefWidth="955.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.patient.MainWindowPatientController">
+   <bottom>
+      <HBox prefHeight="96.0" prefWidth="571.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="buttonClose" mnemonicParsing="false" text="%close" />
+            <Label fx:id="labelInfo" />
+            <Button fx:id="buttonSavePicture" mnemonicParsing="false" text="%savePicture" />
+         </children></HBox>
+   </bottom>
+   <left>
+      <HBox prefHeight="433.0" prefWidth="338.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="115.0">
+               <children>
+                  <Label text="%name" />
+                  <Label text="%surname" />
+                  <Label text="%age" />
+                  <Label text="%doctorName" />
+                  <Label text="%pictureDate" />
+                  <Label text="%technicianName" />
+                  <Label text="%bodyPart" />
+               </children>
+            </VBox>
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="219.0">
+               <children>
+                  <Label fx:id="labelName" />
+                  <Label fx:id="labelSurname" />
+                  <Label fx:id="labelAge" />
+                  <Label fx:id="labelDoctorName" />
+                  <Label fx:id="labelPictureDate" />
+                  <Label fx:id="labelTechnicianName" layoutX="10.0" layoutY="70.0" />
+                  <Label fx:id="labelBodyPart" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </left>
+   <right>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Slider fx:id="sliderDiagnosis" orientation="VERTICAL" />
+            <VBox prefHeight="300.0" prefWidth="195.0">
+               <children>
+                  <ImageView fx:id="imageViewPicture" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Slider fx:id="sliderPicture" />
+                  <TextArea fx:id="textAreaPictureDescription" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </right>
+   <center>
+      <TextArea fx:id="textAreaDiagnosis" prefHeight="200.0" prefWidth="200.0">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin></TextArea>
+   </center>
+</BorderPane>

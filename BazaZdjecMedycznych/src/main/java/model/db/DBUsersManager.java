@@ -23,14 +23,12 @@ import org.apache.commons.dbutils.QueryRunner;
  *
  * @author peer
  */
-public class DBUsersManager {
+public class DBUsersManager extends DBManager {
 
-    private Connection connection = DBConnector.master.getConnection();
-    private Statement statement = DBConnector.master.getStatement();
-    private QueryRunner queryRunner = DBConnector.master.getQueryRunner();//for easy quries
     private HashMap<String, String> usernameMap = new HashMap<String, String>();
     private HashMap<String, String> passwordMap = new HashMap<String, String>();
     private HashMap<String, String> accountTypeMap = new HashMap<String, String>();
+    private HashMap<String, String> namesMap = new HashMap<String, String>();
     private ResultSet usersDbSet;
     /**
      * Used for checking if the input values are correct, before inserting them
@@ -153,7 +151,19 @@ public class DBUsersManager {
     private ResultSet readAllUsersFromUsersDB() throws SQLException {
         ResultSet users;
         if (user != null) {
-            users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE account_type='" + user.toString() + "'");
+            switch (user) {
+                case PATIENT:
+                    users = statement.executeQuery("SELECT u.username as username, u.password as password"
+                            + ", u.account_type as account_type,p.name as name, p.surname as surname"
+                            + " FROM MedicalPictures.UsersDB u JOIN MedicalPictures.Patient p ON u.username=p.username "
+                            + "WHERE u.account_type='" + user.toString() +"'");
+                    break;
+                default:
+                    users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB WHERE account_type='"
+                            + user.toString() + "'");
+                    break;
+
+            }
         } else {
             users = statement.executeQuery("SELECT * FROM MedicalPictures.UsersDB");
         }
@@ -192,6 +202,25 @@ public class DBUsersManager {
             Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return accountTypeMap;
+    }
+
+    public HashMap<String, String> readNames() {
+        if (!namesMap.isEmpty()) {
+            namesMap.clear();
+        }
+        try {
+            updateResultSet();
+            usersDbSet.beforeFirst();
+            while (usersDbSet.next()) {
+                if (user == UserType.PATIENT) {
+                    namesMap.put(usersDbSet.getString("username"), usersDbSet.getString("name") + " " + usersDbSet.getString("surname"));
+                }
+            }
+            usersDbSet.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBUsersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return namesMap;
     }
 
     /**

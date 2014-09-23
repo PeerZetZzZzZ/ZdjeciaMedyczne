@@ -19,12 +19,22 @@ public class UserEntry {
     public SimpleStringProperty password;
     public SimpleStringProperty accountType;
     public BooleanProperty selected;
+    public SimpleStringProperty name;
 
     public UserEntry(String username, String password, String accountType, Boolean selected) {
         this.username = new SimpleStringProperty(username);
         this.password = new SimpleStringProperty(password);
         this.accountType = new SimpleStringProperty(accountType);
         this.selected = new SimpleBooleanProperty(selected);
+    }
+
+    public UserEntry(String username, String name) {
+        this.username = new SimpleStringProperty(username);
+        this.name = new SimpleStringProperty(name);
+    }
+
+    public String getName() {
+        return name.get();
     }
 
     public Boolean getSelected() {
@@ -42,7 +52,8 @@ public class UserEntry {
     public String getAccountType() {
         return accountType.get();
     }
-    public BooleanProperty selectedProperty(){ //neccessary if we want to have this checkbox value in Table
+
+    public BooleanProperty selectedProperty() { //neccessary if we want to have this checkbox value in Table
         return selected;
     }
 }

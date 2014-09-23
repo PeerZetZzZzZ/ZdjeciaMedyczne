@@ -12,11 +12,7 @@ import org.apache.commons.dbutils.QueryRunner;
  *
  * @author PeerZet
  */
-public class DBManagerCommon {
-
-    private Connection connection = DBConnector.master.getConnection();
-    private Statement statement = DBConnector.master.getStatement();
-    private QueryRunner queryRunner = DBConnector.master.getQueryRunner();//for easy quries
+public class DBManagerCommon extends DBManager {
 
     /**
      * It returns username , name+ + surname
